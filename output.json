@@ -1,0 +1,20 @@
+{
+  "patients": [
+    {
+      "aadharNumber": "123456789012",
+      "patientId": "3033349474"
+    },
+    {
+      "aadharNumber": "987654321098",
+      "patientId": "7110051724"
+    },
+    {
+      "aadharNumber": "567890123456",
+      "patientId": "6809010280"
+    },
+    {
+      "aadharNumber": "112233445566",
+      "patientId": "6350700237"
+    }
+  ]
+}
