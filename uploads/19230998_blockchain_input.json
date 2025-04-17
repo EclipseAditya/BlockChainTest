@@ -1,0 +1,11 @@
+{
+  "patientAddress": "0xA82f28C0C8ee80Dab4Ffbc441C32Bff2bBd1A72C",
+  "records": [
+    {
+      "recordID": "PRE050320254502",
+      "recordType": "Prescription",
+      "sha256Hash": "0xb4f035ed983b0df8d592b335b03f4d49712315e0e30b0d78211dd43fa7010f19",
+      "cid": "QmPWkBaSPFGjseUTzvWrxvR3y6MHsDZmePBDn2FtxMBygH"
+    }
+  ]
+}

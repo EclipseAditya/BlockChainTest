@@ -1,0 +1,15 @@
+{
+  "patientAddress": "0x6d81D4B26381E527263096384bCf132F689592bB",
+  "accessType": "self-access by patient",
+  "recordCount": 1,
+  "records": [
+    [
+      "CT 173163150",
+      "CT Scan",
+      "0xce589031204ef57a6de0a2be704d3bc05bdc4378fb69798d7c3e138c7ec1ab97",
+      "QmZRwRCWQVYVrhRvkE6C5c1KzXZ9iNoG1G9x7mNL5EkJNr",
+      "0x01E666BC2F9EDA707C04c1bBcDF01973595c5B58",
+      "1743924176"
+    ]
+  ]
+}

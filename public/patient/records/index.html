@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Medical Records | Medical Records Blockchain</title>
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --primary-dark: #2980b9;
+      --secondary-color: #2ecc71;
+      --secondary-dark: #27ae60;
+      --error-color: #e74c3c;
+      --warning-color: #f39c12;
+      --text-color: #333;
+      --light-gray: #f4f6f9;
+      --border-color: #ddd;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: var(--light-gray);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .logo {
+      color: var(--primary-color);
+      font-size: 24px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    
+    .user-menu {
+      display: flex;
+      align-items: center;
+    }
+    
+    .user-name {
+      margin-right: 15px;
+      font-weight: 500;
+    }
+    
+    .logout-btn {
+      background-color: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .logout-btn:hover {
+      background-color: #f1f1f1;
+    }
+    
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      gap: 20px;
+    }
+    
+    .sidebar {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+    
+    .sidebar-menu {
+      list-style: none;
+    }
+    
+    .sidebar-menu li {
+      margin-bottom: 10px;
+    }
+    
+    .sidebar-menu a {
+      display: block;
+      padding: 10px 15px;
+      color: var(--text-color);
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+    
+    .sidebar-menu a.active,
+    .sidebar-menu a:hover {
+      background-color: var(--light-gray);
+      color: var(--primary-color);
+    }
+    
+    .sidebar-menu a.active {
+      font-weight: 500;
+      border-left: 3px solid var(--primary-color);
+    }
+    
+    .content {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+    }
+    
+    .content-header {
+      margin-bottom: 20px;
+    }
+    
+    .content-header h1 {
+      color: var(--text-color);
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+    
+    .content-header p {
+      color: #777;
+      font-size: 14px;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border-color);
+    }
+    
+    .card-title {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 15px;
+      color: var(--primary-color);
+    }
+    
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 0;
+    }
+    
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-left-color: var(--primary-color);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+    }
+    
+    .empty-state svg {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+    
+    .empty-state h3 {
+      font-size: 18px;
+      color: #555;
+      margin-bottom: 10px;
+    }
+    
+    .empty-state p {
+      color: #777;
+      max-width: 400px;
+      margin: 0 auto 20px;
+    }
+    
+    .button {
+      display: inline-block;
+      background-color: var(--primary-color);
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
+    
+    .button:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .button-secondary {
+      background-color: var(--secondary-color);
+    }
+    
+    .button-secondary:hover {
+      background-color: var(--secondary-dark);
+    }
+    
+    .button-sm {
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+
+    .record-card {
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 15px;
+      margin-bottom: 15px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .record-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .record-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    
+    .record-title {
+      font-weight: 500;
+      font-size: 16px;
+      color: var(--primary-color);
+    }
+    
+    .record-date {
+      color: #777;
+      font-size: 14px;
+    }
+    
+    .record-content {
+      margin-bottom: 15px;
+    }
+    
+    .record-doctor {
+      font-size: 14px;
+      color: #777;
+    }
+    
+    .record-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-color);
+      font-size: 13px;
+      color: #777;
+    }
+    
+    .record-cid a {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+    
+    .record-cid a:hover {
+      text-decoration: underline;
+    }
+
+    .alert {
+      padding: 12px 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      display: none;
+    }
+    
+    .alert-error {
+      background-color: rgba(231, 76, 60, 0.2);
+      color: var(--error-color);
+      border: 1px solid rgba(231, 76, 60, 0.3);
+    }
+
+    .record-filters {
+      display: flex;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+
+    .record-filters select {
+      padding: 8px 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background-color: white;
+    }
+    
+    .record-search {
+      flex-grow: 1;
+      position: relative;
+    }
+    
+    .record-search input {
+      width: 100%;
+      padding: 8px 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .record-search input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    }
+    
+    .record-view-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .modal-content {
+      background-color: white;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 30px;
+      position: relative;
+    }
+    
+    .modal-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #999;
+    }
+    
+    .modal-close:hover {
+      color: var(--primary-color);
+    }
+    
+    .modal-header {
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .modal-title {
+      font-size: 20px;
+      color: var(--primary-color);
+      margin-bottom: 5px;
+    }
+    
+    .modal-subtitle {
+      color: #777;
+      font-size: 14px;
+    }
+    
+    .modal-body {
+      margin-bottom: 20px;
+    }
+    
+    .record-detail {
+      margin-bottom: 15px;
+    }
+    
+    .detail-label {
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 5px;
+    }
+    
+    .detail-value {
+      font-size: 15px;
+    }
+    
+    .modal-footer {
+      padding-top: 15px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: flex-end;
+    }
+    
+    @media (max-width: 768px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <a href="/" class="logo">Medical Records Blockchain</a>
+      <div class="user-menu">
+        <span class="user-name" id="user-name">Loading...</span>
+        <button class="logout-btn" id="logout-btn">Logout</button>
+      </div>
+    </header>
+    
+    <div class="main-content">
+      <div class="sidebar">
+        <ul class="sidebar-menu">
+          <li><a href="/patient/dashboard" id="dashboard-link">Dashboard</a></li>
+          <li><a href="/patient/records" class="active">My Records</a></li>
+          <li><a href="/patient/doctors">Authorized Doctors</a></li>
+          <li><a href="/patient/uploaders">Manage Uploaders</a></li>
+          <li><a href="/patient/settings">Account Settings</a></li>
+        </ul>
+      </div>
+      
+      <div class="content">
+        <div id="loading" class="loading">
+          <div class="spinner"></div>
+          <p>Loading medical records...</p>
+        </div>
+        
+        <div id="main-content" style="display: none;">
+          <div class="content-header">
+            <h1>My Medical Records</h1>
+            <p>View and manage your health records stored on blockchain</p>
+          </div>
+          
+          <div class="alert alert-error" id="error-alert"></div>
+          
+          <div class="record-filters">
+            <div class="record-search">
+              <input type="text" id="record-search" placeholder="Search records...">
+            </div>
+            <select id="filter-date">
+              <option value="all">All Dates</option>
+              <option value="recent">Recent (30 days)</option>
+              <option value="month-3">Last 3 Months</option>
+              <option value="month-6">Last 6 Months</option>
+              <option value="year-1">Last Year</option>
+            </select>
+            <select id="filter-type">
+              <option value="all">All Types</option>
+              <option value="general">General Visit</option>
+              <option value="test">Test Results</option>
+              <option value="prescription">Prescriptions</option>
+              <option value="surgery">Surgery</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          
+          <div id="records-container">
+            <div class="empty-state" id="empty-records" style="display: none;">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+              <h3>No Medical Records Found</h3>
+              <p>You don't have any medical records yet. Records will appear here once medical professionals upload them to your account.</p>
+            </div>
+            
+            <div id="records-list">
+              <!-- Records will be added here dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Record View Modal -->
+  <div id="record-modal" class="record-view-modal">
+    <div class="modal-content">
+      <button class="modal-close" id="modal-close">&times;</button>
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-title">Record Title</h3>
+        <div class="modal-subtitle" id="modal-date">Date: --/--/----</div>
+      </div>
+      <div class="modal-body" id="modal-body">
+        <!-- Record details will be added here -->
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="button" id="view-ipfs" target="_blank">View on IPFS</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get elements
+      const loadingElement = document.getElementById('loading');
+      const mainContent = document.getElementById('main-content');
+      const userNameElement = document.getElementById('user-name');
+      const dashboardLink = document.getElementById('dashboard-link');
+      const recordsList = document.getElementById('records-list');
+      const emptyRecords = document.getElementById('empty-records');
+      const errorAlert = document.getElementById('error-alert');
+      const recordModal = document.getElementById('record-modal');
+      const modalClose = document.getElementById('modal-close');
+      const modalTitle = document.getElementById('modal-title');
+      const modalDate = document.getElementById('modal-date');
+      const modalBody = document.getElementById('modal-body');
+      const viewIpfs = document.getElementById('view-ipfs');
+      
+      // Filter elements
+      const recordSearch = document.getElementById('record-search');
+      const filterDate = document.getElementById('filter-date');
+      const filterType = document.getElementById('filter-type');
+      
+      // Get patient ID from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const patientId = urlParams.get('id');
+      
+      // If no patient ID in URL, check localStorage
+      const storedPatientId = localStorage.getItem('patientId');
+      const currentPatientId = patientId || storedPatientId;
+      
+      // Always update sidebar links with patient ID
+      document.querySelectorAll('.sidebar-menu a').forEach(link => {
+        const href = link.getAttribute('href').split('?')[0];
+        link.href = `${href}?id=${currentPatientId}`;
+      });
+      
+      // If no patient ID is found, redirect to login
+      if (!currentPatientId) {
+        window.location.href = '/patient/login.html';
+        return;
+      }
+      
+      // Store patient ID in localStorage for future use
+      localStorage.setItem('patientId', currentPatientId);
+      
+      // Array to store all records (for filtering)
+      let allRecords = [];
+      
+      // Fetch patient data and medical records
+      fetchData();
+      
+      async function fetchData() {
+        try {
+          // Fetch patient data
+          const patientResponse = await fetch(`/api/patient/${currentPatientId}`);
+          
+          if (!patientResponse.ok) {
+            throw new Error('Failed to fetch patient data');
+          }
+          
+          const patientData = await patientResponse.json();
+          userNameElement.textContent = patientData.fullName;
+          
+          // Fetch medical records
+          const recordsResponse = await fetch(`/api/patient/records/${currentPatientId}`);
+          
+          if (!recordsResponse.ok) {
+            throw new Error('Failed to fetch medical records');
+          }
+          
+          const recordsData = await recordsResponse.json();
+          allRecords = recordsData.records || [];
+          
+          // Display the records
+          displayRecords(allRecords);
+          
+          // Show content
+          loadingElement.style.display = 'none';
+          mainContent.style.display = 'block';
+          
+        } catch (error) {
+          console.error('Error fetching data:', error);
+          showError('Failed to load medical records. Please try again later.');
+          loadingElement.style.display = 'none';
+          mainContent.style.display = 'block';
+        }
+      }
+      
+      // Display records in the UI
+      function displayRecords(records) {
+        if (records.length === 0) {
+          emptyRecords.style.display = 'block';
+          recordsList.innerHTML = '';
+          return;
+        }
+        
+        emptyRecords.style.display = 'none';
+        recordsList.innerHTML = '';
+        
+        records.forEach(record => {
+          // Format timestamp if available
+          let formattedDate = 'Unknown Date';
+          try {
+            if (record.timestamp) {
+              const timestamp = parseInt(record.timestamp);
+              if (!isNaN(timestamp)) {
+                formattedDate = new Date(timestamp * 1000).toLocaleDateString();
+              }
+            }
+          } catch (e) {
+            console.error('Error formatting date:', e);
+          }
+          
+          const recordCard = document.createElement('div');
+          recordCard.className = 'record-card';
+          recordCard.dataset.recordId = record.recordID || record.id;
+          
+          // Check for record title, defaulting to record type if available
+          const recordTitle = record.title || record.recordType || 'Medical Record';
+          // Check for doctor/uploader info
+          const uploadedBy = record.doctorAddress ? 
+            `${record.doctorAddress.substring(0, 6)}...${record.doctorAddress.substring(record.doctorAddress.length - 4)}` : 
+            'Unknown';
+          
+          recordCard.innerHTML = `
+            <div class="record-header">
+              <div class="record-title">${recordTitle}</div>
+              <div class="record-date">${formattedDate}</div>
+            </div>
+            <div class="record-content">
+              <p>${record.description || 'No description available'}</p>
+            </div>
+            <div class="record-doctor">Uploaded by: ${uploadedBy}</div>
+            <div class="record-meta">
+              <div class="record-type">${record.recordType || 'General'}</div>
+              <div class="record-cid">
+                <a href="#" class="view-record" data-record-id="${record.recordID || record.id}">View Details</a>
+              </div>
+            </div>
+          `;
+          
+          recordsList.appendChild(recordCard);
+        });
+        
+        // Add event listeners to view links
+        document.querySelectorAll('.view-record').forEach(link => {
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const recordId = this.getAttribute('data-record-id');
+            const record = records.find(r => r.recordID === recordId || r.id === recordId);
+            showRecordModal(record);
+          });
+        });
+      }
+      
+      // Show record modal with details
+      function showRecordModal(record) {
+        if (!record) return;
+        
+        // Format timestamp if available
+        let formattedDate = 'Unknown Date';
+        try {
+          if (record.timestamp) {
+            const timestamp = parseInt(record.timestamp);
+            if (!isNaN(timestamp)) {
+              formattedDate = new Date(timestamp * 1000).toLocaleDateString();
+            }
+          }
+        } catch (e) {
+          console.error('Error formatting date:', e);
+        }
+        
+        // Check for record title, defaulting to record type if available
+        const recordTitle = record.title || record.recordType || 'Medical Record';
+        
+        modalTitle.textContent = recordTitle;
+        modalDate.textContent = `Date: ${formattedDate}`;
+        
+        // Construct modal body
+        modalBody.innerHTML = '';
+        
+        const details = [
+          { label: 'Record ID', value: record.recordID || record.id || 'Not available' },
+          { label: 'Record Type', value: record.recordType || 'General' },
+          { label: 'Description', value: record.description || 'No description available' },
+          { label: 'Uploaded By', value: record.doctorAddress ? 
+            `${record.doctorAddress.substring(0, 6)}...${record.doctorAddress.substring(record.doctorAddress.length - 4)}` :
+            'Unknown' },
+          { label: 'Transaction Hash', value: record.txHash || 'Not available' }
+        ];
+        
+        details.forEach(detail => {
+          const detailElement = document.createElement('div');
+          detailElement.className = 'record-detail';
+          
+          detailElement.innerHTML = `
+            <div class="detail-label">${detail.label}</div>
+            <div class="detail-value">${detail.value}</div>
+          `;
+          
+          modalBody.appendChild(detailElement);
+        });
+        
+        // Set IPFS link
+        if (record.cid) {
+          viewIpfs.href = `https://gateway.pinata.cloud/ipfs/${record.cid}`;
+          viewIpfs.style.display = 'inline-block';
+        } else {
+          viewIpfs.style.display = 'none';
+        }
+        
+        // Show modal
+        recordModal.style.display = 'flex';
+      }
+      
+      // Close modal when clicking the close button
+      modalClose.addEventListener('click', function() {
+        recordModal.style.display = 'none';
+      });
+      
+      // Close modal when clicking outside the content
+      recordModal.addEventListener('click', function(e) {
+        if (e.target === recordModal) {
+          recordModal.style.display = 'none';
+        }
+      });
+      
+      // Filter records based on search and filter values
+      function filterRecords() {
+        const searchTerm = recordSearch.value.toLowerCase();
+        const dateFilter = filterDate.value;
+        const typeFilter = filterType.value;
+        
+        let filtered = allRecords.filter(record => {
+          // Search term filter
+          const matchesSearch = 
+            (record.title && record.title.toLowerCase().includes(searchTerm)) ||
+            (record.description && record.description.toLowerCase().includes(searchTerm)) ||
+            (record.uploadedBy && record.uploadedBy.toLowerCase().includes(searchTerm));
+          
+          if (!matchesSearch) return false;
+          
+          // Date filter
+          if (dateFilter !== 'all') {
+            const recordDate = new Date(record.timestamp * 1000);
+            const now = new Date();
+            
+            switch (dateFilter) {
+              case 'recent':
+                if ((now - recordDate) > 30 * 24 * 60 * 60 * 1000) return false;
+                break;
+              case 'month-3':
+                if ((now - recordDate) > 3 * 30 * 24 * 60 * 60 * 1000) return false;
+                break;
+              case 'month-6':
+                if ((now - recordDate) > 6 * 30 * 24 * 60 * 60 * 1000) return false;
+                break;
+              case 'year-1':
+                if ((now - recordDate) > 365 * 24 * 60 * 60 * 1000) return false;
+                break;
+            }
+          }
+          
+          // Type filter
+          if (typeFilter !== 'all' && record.recordType !== typeFilter) {
+            return false;
+          }
+          
+          return true;
+        });
+        
+        displayRecords(filtered);
+      }
+      
+      // Add event listeners for filters
+      recordSearch.addEventListener('input', filterRecords);
+      filterDate.addEventListener('change', filterRecords);
+      filterType.addEventListener('change', filterRecords);
+      
+      // Logout handler
+      document.getElementById('logout-btn').addEventListener('click', function() {
+        localStorage.removeItem('patientId');
+        window.location.href = '/';
+      });
+      
+      // Show error alert
+      function showError(message) {
+        errorAlert.textContent = message;
+        errorAlert.style.display = 'block';
+        
+        // Hide after 5 seconds
+        setTimeout(() => {
+          errorAlert.style.display = 'none';
+        }, 5000);
+      }
+    });
+  </script>
+</body>
+</html>

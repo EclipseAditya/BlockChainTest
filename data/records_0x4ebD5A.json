@@ -1,0 +1,15 @@
+{
+  "patientAddress": "0x4ebD5A7dC4752e58DAec0d061f15e3b7E03F3732",
+  "accessType": "self-access by patient",
+  "recordCount": 1,
+  "records": [
+    [
+      "MED230592326",
+      "Medical Certificate",
+      "0xce589031204ef57a6de0a2be704d3bc05bdc4378fb69798d7c3e138c7ec1ab97",
+      "QmZRwRCWQVYVrhRvkE6C5c1KzXZ9iNoG1G9x7mNL5EkJNr",
+      "0x7243a00B75beaA6998ea43ffeD46dE7914931A4d",
+      "1743908234"
+    ]
+  ]
+}

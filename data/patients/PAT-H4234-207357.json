@@ -1,0 +1,14 @@
+{
+  "patientId": "PAT-H4234-207357",
+  "walletAddress": "0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2",
+  "aadhaarNumber": "123234324234",
+  "fullName": "hdsjfj",
+  "age": 12,
+  "gender": "Female",
+  "bloodGroup": "A-",
+  "allergies": "kdsjf",
+  "medicalConditions": "None",
+  "registrationDate": "2025-04-05T21:06:47.357Z",
+  "password": "abcd@1234",
+  "privateKey": "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519f97bede61418"
+}

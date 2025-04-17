@@ -1,0 +1,10 @@
+{
+  "patientID": "0123456789",
+  "files": [
+    {
+      "recordID": "BT20240515",
+      "recordType": "Blood Test",
+      "filePath": "C:\\Users\\MSI-1\\Desktop\\hackachino\\web\\web\\data\\unnamed.png"
+    }
+  ]
+} 

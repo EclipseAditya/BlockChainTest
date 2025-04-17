@@ -1,0 +1,28 @@
+{
+  "patients": [
+    {
+      "patientId": "1234567890",
+      "aadharNumber": "123456789012",
+      "name": "John Doe",
+      "walletAddress": "0x1234567890abcdef1234567890abcdef12345678",
+      "basicInfo": {
+        "age": 35,
+        "gender": "Male",
+        "allergies": ["Penicillin", "Peanuts"],
+        "preexistingMedicalConditions": ["Hypertension", "Type 2 Diabetes"]
+      }
+    },
+    {
+      "patientId": "0987654321",
+      "aadharNumber": "098765432109",
+      "name": "Jane Smith",
+      "walletAddress": "0xabcdef1234567890abcdef1234567890abcdef12",
+      "basicInfo": {
+        "age": 28,
+        "gender": "Female",
+        "allergies": ["Latex"],
+        "preexistingMedicalConditions": []
+      }
+    }
+  ]
+} 

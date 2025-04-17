@@ -1,0 +1,11 @@
+{
+  "patientAddress": "0xB9a87Fa48c0CbA6cB6399d5278d01d80aC621451",
+  "records": [
+    {
+      "recordID": "BLO044516153",
+      "recordType": "Blood Test",
+      "sha256Hash": "0xb4f035ed983b0df8d592b335b03f4d49712315e0e30b0d78211dd43fa7010f19",
+      "cid": "QmPWkBaSPFGjseUTzvWrxvR3y6MHsDZmePBDn2FtxMBygH"
+    }
+  ]
+}

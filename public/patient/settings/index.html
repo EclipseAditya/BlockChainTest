@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:">
+  <title>Account Settings | Medical Records Blockchain</title>
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --primary-dark: #2980b9;
+      --secondary-color: #2ecc71;
+      --secondary-dark: #27ae60;
+      --error-color: #e74c3c;
+      --success-color: #2ecc71;
+      --text-color: #333;
+      --light-gray: #f4f6f9;
+      --border-color: #ddd;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: var(--light-gray);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .logo {
+      color: var(--primary-color);
+      font-size: 24px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    
+    .user-menu {
+      display: flex;
+      align-items: center;
+    }
+    
+    .user-name {
+      margin-right: 15px;
+      font-weight: 500;
+    }
+    
+    .logout-btn {
+      background-color: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .logout-btn:hover {
+      background-color: #f1f1f1;
+    }
+    
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      gap: 20px;
+    }
+    
+    .sidebar {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+    
+    .sidebar-menu {
+      list-style: none;
+    }
+    
+    .sidebar-menu li {
+      margin-bottom: 10px;
+    }
+    
+    .sidebar-menu a {
+      display: block;
+      padding: 10px 15px;
+      color: var(--text-color);
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+    
+    .sidebar-menu a.active,
+    .sidebar-menu a:hover {
+      background-color: var(--light-gray);
+      color: var(--primary-color);
+    }
+    
+    .sidebar-menu a.active {
+      font-weight: 500;
+      border-left: 3px solid var(--primary-color);
+    }
+    
+    .content {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+    }
+    
+    .content-header {
+      margin-bottom: 30px;
+    }
+    
+    .content-header h1 {
+      color: var(--text-color);
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+    
+    .content-header p {
+      color: #777;
+      font-size: 14px;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border-color);
+    }
+    
+    .card-title {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 15px;
+      color: var(--primary-color);
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #555;
+    }
+    
+    input[type="password"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 15px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    
+    input[type="password"]:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+      outline: none;
+    }
+    
+    .button {
+      display: inline-block;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+    
+    .button:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .alert {
+      padding: 12px 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    
+    .alert-error {
+      background-color: rgba(231, 76, 60, 0.1);
+      border: 1px solid rgba(231, 76, 60, 0.3);
+      color: var(--error-color);
+    }
+    
+    .alert-success {
+      background-color: rgba(46, 204, 113, 0.1);
+      border: 1px solid rgba(46, 204, 113, 0.3);
+      color: var(--success-color);
+    }
+    
+    .profile-readonly {
+      margin-bottom: 30px;
+    }
+    
+    .profile-item {
+      display: flex;
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 0;
+    }
+    
+    .profile-item:last-child {
+      border-bottom: none;
+    }
+    
+    .profile-label {
+      flex: 0 0 180px;
+      font-weight: 500;
+      color: #555;
+    }
+    
+    .profile-value {
+      flex: 1;
+      color: #333;
+    }
+    
+    .loading {
+      display: none;
+      text-align: center;
+      margin: 20px 0;
+    }
+    
+    .spinner {
+      border: 3px solid rgba(0, 0, 0, 0.1);
+      border-top: 3px solid var(--primary-color);
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 10px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    @media (max-width: 768px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+      
+      .profile-label {
+        flex: 0 0 120px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <a href="/" class="logo">Medical Records Blockchain</a>
+      <div class="user-menu">
+        <span class="user-name" id="user-name">Loading...</span>
+        <button class="logout-btn" id="logout-btn">Logout</button>
+      </div>
+    </header>
+    
+    <div class="main-content">
+      <div class="sidebar">
+        <ul class="sidebar-menu">
+          <li><a href="/patient/dashboard" id="dashboard-link">Dashboard</a></li>
+          <li><a href="/patient/records" id="records-link">My Records</a></li>
+          <li><a href="/patient/doctors" id="doctors-link">Authorized Doctors</a></li>
+          <li><a href="/patient/uploaders" id="uploaders-link">Manage Uploaders</a></li>
+          <li><a href="/patient/settings" class="active">Account Settings</a></li>
+        </ul>
+      </div>
+      
+      <div class="content">
+        <div class="content-header">
+          <h1>Account Settings</h1>
+          <p>View your profile information and change your password</p>
+        </div>
+        
+        <div id="loading" class="loading">
+          <div class="spinner"></div>
+          <p>Loading your account information...</p>
+        </div>
+        
+        <div id="settings-content" style="display: none;">
+          <div class="card">
+            <div class="card-title">Profile Information</div>
+            <div class="profile-readonly">
+              <div class="profile-item">
+                <div class="profile-label">Patient ID</div>
+                <div class="profile-value" id="patient-id">-</div>
+              </div>
+              <div class="profile-item">
+                <div class="profile-label">Full Name</div>
+                <div class="profile-value" id="full-name">-</div>
+              </div>
+              <div class="profile-item">
+                <div class="profile-label">Email</div>
+                <div class="profile-value" id="email">-</div>
+              </div>
+              <div class="profile-item">
+                <div class="profile-label">Phone Number</div>
+                <div class="profile-value" id="phone">-</div>
+              </div>
+              <div class="profile-item">
+                <div class="profile-label">Gender</div>
+                <div class="profile-value" id="gender">-</div>
+              </div>
+              <div class="profile-item">
+                <div class="profile-label">Blood Group</div>
+                <div class="profile-value" id="blood-group">-</div>
+              </div>
+              <div class="profile-item">
+                <div class="profile-label">Registered On</div>
+                <div class="profile-value" id="registration-date">-</div>
+              </div>
+              <div class="profile-item">
+                <div class="profile-label">Blockchain Address</div>
+                <div class="profile-value" id="wallet-address">-</div>
+              </div>
+            </div>
+            <p class="note" style="font-size: 14px; color: #666;">To update your profile information, please contact the hospital administration.</p>
+          </div>
+          
+          <div class="card">
+            <div class="card-title">Change Password</div>
+            
+            <div id="alert-success" class="alert alert-success"></div>
+            <div id="alert-error" class="alert alert-error"></div>
+            
+            <form id="password-form">
+              <div class="form-group">
+                <label for="current-password">Current Password</label>
+                <input type="password" id="current-password" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="new-password">New Password</label>
+                <input type="password" id="new-password" required minlength="6">
+              </div>
+              
+              <div class="form-group">
+                <label for="confirm-password">Confirm New Password</label>
+                <input type="password" id="confirm-password" required minlength="6">
+              </div>
+              
+              <div id="password-loading" class="loading">
+                <div class="spinner"></div>
+                <p>Updating your password...</p>
+              </div>
+              
+              <button type="submit" class="button">Change Password</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get elements
+      const userNameElement = document.getElementById('user-name');
+      const loadingElement = document.getElementById('loading');
+      const settingsContent = document.getElementById('settings-content');
+      const logoutBtn = document.getElementById('logout-btn');
+      const passwordForm = document.getElementById('password-form');
+      const successAlert = document.getElementById('alert-success');
+      const errorAlert = document.getElementById('alert-error');
+      const passwordLoading = document.getElementById('password-loading');
+      
+      // Profile elements
+      const patientIdElement = document.getElementById('patient-id');
+      const fullNameElement = document.getElementById('full-name');
+      const emailElement = document.getElementById('email');
+      const phoneElement = document.getElementById('phone');
+      const genderElement = document.getElementById('gender');
+      const bloodGroupElement = document.getElementById('blood-group');
+      const registrationDateElement = document.getElementById('registration-date');
+      const walletAddressElement = document.getElementById('wallet-address');
+      
+      // Get patient ID from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const patientId = urlParams.get('id');
+      
+      // If no patient ID in URL, check localStorage
+      const storedPatientId = localStorage.getItem('patientId');
+      const currentPatientId = patientId || storedPatientId;
+      
+      // Always update sidebar links with patient ID
+      document.querySelectorAll('.sidebar-menu a').forEach(link => {
+        const href = link.getAttribute('href').split('?')[0];
+        link.href = `${href}?id=${currentPatientId}`;
+      });
+      
+      // If no patient ID is found, redirect to login
+      if (!currentPatientId) {
+        window.location.href = '/patient/login.html';
+        return;
+      }
+      
+      // Store patient ID in localStorage for future use
+      localStorage.setItem('patientId', currentPatientId);
+      
+      // Fetch patient data
+      fetchPatientData();
+      
+      async function fetchPatientData() {
+        try {
+          // Show loading state
+          loadingElement.style.display = 'block';
+          settingsContent.style.display = 'none';
+          
+          // Fetch patient data
+          const response = await fetch(`/api/patient/${currentPatientId}`);
+          
+          if (!response.ok) {
+            throw new Error('Failed to fetch patient data');
+          }
+          
+          const patientData = await response.json();
+          
+          // Fill in profile information
+          userNameElement.textContent = patientData.fullName;
+          patientIdElement.textContent = patientData.patientId;
+          fullNameElement.textContent = patientData.fullName;
+          emailElement.textContent = patientData.email || 'Not provided';
+          phoneElement.textContent = patientData.phoneNumber || 'Not provided';
+          genderElement.textContent = patientData.gender || 'Not provided';
+          bloodGroupElement.textContent = patientData.bloodGroup || 'Not provided';
+          
+          // Format registration date
+          if (patientData.registrationDate) {
+            const date = new Date(patientData.registrationDate);
+            registrationDateElement.textContent = date.toLocaleDateString();
+          } else {
+            registrationDateElement.textContent = 'Not available';
+          }
+          
+          // Format wallet address
+          if (patientData.walletAddress) {
+            const shortAddress = `${patientData.walletAddress.substring(0, 8)}...${patientData.walletAddress.substring(patientData.walletAddress.length - 6)}`;
+            walletAddressElement.textContent = shortAddress;
+            walletAddressElement.title = patientData.walletAddress;
+          } else {
+            walletAddressElement.textContent = 'Not available';
+          }
+          
+          // Hide loading, show content
+          loadingElement.style.display = 'none';
+          settingsContent.style.display = 'block';
+          
+        } catch (error) {
+          console.error('Error fetching patient data:', error);
+          showError('Failed to load your account information. Please try again later.');
+          
+          // Hide loading
+          loadingElement.style.display = 'none';
+        }
+      }
+      
+      // Password form submission
+      passwordForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Get form values
+        const currentPassword = document.getElementById('current-password').value;
+        const newPassword = document.getElementById('new-password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+        
+        // Clear previous alerts
+        hideError();
+        hideSuccess();
+        
+        // Validate passwords
+        if (newPassword !== confirmPassword) {
+          showError('New passwords do not match');
+          return;
+        }
+        
+        if (newPassword.length < 6) {
+          showError('New password must be at least 6 characters');
+          return;
+        }
+        
+        // Show loading
+        passwordLoading.style.display = 'block';
+        
+        try {
+          // First validate current password
+          const loginResponse = await fetch('/api/patient/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              patientId: currentPatientId,
+              password: currentPassword
+            })
+          });
+          
+          if (!loginResponse.ok) {
+            showError('Current password is incorrect');
+            passwordLoading.style.display = 'none';
+            return;
+          }
+          
+          // Now update password
+          const updateResponse = await fetch('/api/patient/set-password', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              patientId: currentPatientId,
+              password: newPassword
+            })
+          });
+          
+          const result = await updateResponse.json();
+          
+          if (updateResponse.ok) {
+            // Clear form
+            passwordForm.reset();
+            
+            // Show success
+            showSuccess('Password updated successfully');
+          } else {
+            showError(result.error || 'Failed to update password');
+          }
+          
+        } catch (error) {
+          console.error('Error updating password:', error);
+          showError('An error occurred. Please try again later.');
+        }
+        
+        // Hide loading
+        passwordLoading.style.display = 'none';
+      });
+      
+      // Logout button handler
+      logoutBtn.addEventListener('click', function() {
+        // Clear stored data
+        localStorage.removeItem('patientId');
+        
+        // Redirect to login page
+        window.location.href = '/patient/login.html';
+      });
+      
+      // Helper function to show error
+      function showError(message) {
+        errorAlert.textContent = message;
+        errorAlert.style.display = 'block';
+      }
+      
+      // Helper function to hide error
+      function hideError() {
+        errorAlert.style.display = 'none';
+      }
+      
+      // Helper function to show success
+      function showSuccess(message) {
+        successAlert.textContent = message;
+        successAlert.style.display = 'block';
+      }
+      
+      // Helper function to hide success
+      function hideSuccess() {
+        successAlert.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html> 

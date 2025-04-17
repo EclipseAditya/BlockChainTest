@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Uploaders | Medical Records Blockchain</title>
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --primary-dark: #2980b9;
+      --secondary-color: #2ecc71;
+      --secondary-dark: #27ae60;
+      --error-color: #e74c3c;
+      --warning-color: #f39c12;
+      --text-color: #333;
+      --light-gray: #f4f6f9;
+      --border-color: #ddd;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: var(--light-gray);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .logo {
+      color: var(--primary-color);
+      font-size: 24px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    
+    .user-menu {
+      display: flex;
+      align-items: center;
+    }
+    
+    .user-name {
+      margin-right: 15px;
+      font-weight: 500;
+    }
+    
+    .logout-btn {
+      background-color: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .logout-btn:hover {
+      background-color: #f1f1f1;
+    }
+    
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      gap: 20px;
+    }
+    
+    .sidebar {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+    
+    .sidebar-menu {
+      list-style: none;
+    }
+    
+    .sidebar-menu li {
+      margin-bottom: 10px;
+    }
+    
+    .sidebar-menu a {
+      display: block;
+      padding: 10px 15px;
+      color: var(--text-color);
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+    
+    .sidebar-menu a.active,
+    .sidebar-menu a:hover {
+      background-color: var(--light-gray);
+      color: var(--primary-color);
+    }
+    
+    .sidebar-menu a.active {
+      font-weight: 500;
+      border-left: 3px solid var(--primary-color);
+    }
+    
+    .content {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+    }
+    
+    .content-header {
+      margin-bottom: 20px;
+    }
+    
+    .content-header h1 {
+      color: var(--text-color);
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+    
+    .content-header p {
+      color: #777;
+      font-size: 14px;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border-color);
+    }
+    
+    .card-title {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 15px;
+      color: var(--primary-color);
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    }
+    
+    .button {
+      display: inline-block;
+      background-color: var(--primary-color);
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
+    
+    .button:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .button-secondary {
+      background-color: var(--secondary-color);
+    }
+    
+    .button-secondary:hover {
+      background-color: var(--secondary-dark);
+    }
+    
+    .button-sm {
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+    
+    .button-danger {
+      background-color: var(--error-color);
+    }
+    
+    .button-danger:hover {
+      background-color: #c0392b;
+    }
+    
+    .records-list {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    
+    .records-list th,
+    .records-list td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .records-list th {
+      font-weight: 500;
+      color: #777;
+      font-size: 13px;
+      background-color: var(--light-gray);
+    }
+    
+    .records-list tr:hover {
+      background-color: var(--light-gray);
+    }
+    
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 0;
+    }
+    
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-left-color: var(--primary-color);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+    }
+    
+    .empty-state svg {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+    
+    .empty-state h3 {
+      font-size: 18px;
+      color: #555;
+      margin-bottom: 10px;
+    }
+    
+    .empty-state p {
+      color: #777;
+      max-width: 400px;
+      margin: 0 auto 20px;
+    }
+    
+    .alert {
+      padding: 12px 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      display: none;
+    }
+    
+    .alert-success {
+      background-color: rgba(46, 204, 113, 0.2);
+      color: var(--secondary-color);
+      border: 1px solid rgba(46, 204, 113, 0.3);
+    }
+    
+    .alert-error {
+      background-color: rgba(231, 76, 60, 0.2);
+      color: var(--error-color);
+      border: 1px solid rgba(231, 76, 60, 0.3);
+    }
+    
+    .tab-buttons {
+      display: flex;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .tab-button {
+      padding: 10px 20px;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      font-size: 16px;
+      color: #777;
+      transition: all 0.3s;
+    }
+    
+    .tab-button.active {
+      border-bottom-color: var(--primary-color);
+      color: var(--primary-color);
+      font-weight: 500;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    .info-box {
+      background-color: rgba(52, 152, 219, 0.1);
+      border: 1px solid rgba(52, 152, 219, 0.2);
+      border-radius: 4px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .info-box-title {
+      font-weight: 500;
+      margin-bottom: 5px;
+      color: var(--primary-color);
+    }
+    
+    @media (max-width: 768px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <a href="/" class="logo">Medical Records Blockchain</a>
+      <div class="user-menu">
+        <span class="user-name" id="user-name">Loading...</span>
+        <button class="logout-btn" id="logout-btn">Logout</button>
+      </div>
+    </header>
+    
+    <div class="main-content">
+      <div class="sidebar">
+        <ul class="sidebar-menu">
+          <li><a href="/patient/dashboard" id="dashboard-link">Dashboard</a></li>
+          <li><a href="/patient/records">My Records</a></li>
+          <li><a href="/patient/doctors">Authorized Doctors</a></li>
+          <li><a href="/patient/uploaders" class="active">Manage Uploaders</a></li>
+          <li><a href="/patient/settings">Account Settings</a></li>
+        </ul>
+      </div>
+      
+      <div class="content">
+        <div id="loading" class="loading">
+          <div class="spinner"></div>
+          <p>Loading uploader data...</p>
+        </div>
+        
+        <div id="main-content" style="display: none;">
+          <div class="content-header">
+            <h1>Manage Uploaders</h1>
+            <p>Control which addresses can upload medical records on your behalf</p>
+          </div>
+          
+          <div class="alert alert-success" id="success-alert"></div>
+          <div class="alert alert-error" id="error-alert"></div>
+          
+          <div class="info-box">
+            <div class="info-box-title">What are uploaders?</div>
+            <p>Uploaders are Ethereum addresses that you authorize to upload your medical records to the blockchain on your behalf. This could be hospitals, clinics, or any other medical service providers.</p>
+          </div>
+          
+          <div class="tab-buttons">
+            <button class="tab-button active" data-tab="authorized">Authorized Uploaders</button>
+            <button class="tab-button" data-tab="authorize">Authorize New Uploader</button>
+          </div>
+          
+          <div class="tab-content active" id="authorized-tab">
+            <div class="card">
+              <div class="card-title">Currently Authorized Uploaders</div>
+              
+              <div id="uploader-list">
+                <!-- Uploader list will be inserted here -->
+                <div class="empty-state" id="empty-uploaders" style="display: none;">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                  <h3>No Uploaders Authorized</h3>
+                  <p>You haven't authorized any uploaders yet. Use the "Authorize New Uploader" tab to grant upload permissions.</p>
+                </div>
+                
+                <div id="uploader-table-container">
+                  <table class="records-list" id="uploader-table">
+                    <thead>
+                      <tr>
+                        <th>Uploader Address</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="uploader-table-body">
+                      <!-- Uploader rows will be added here -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="tab-content" id="authorize-tab">
+            <div class="card">
+              <div class="card-title">Authorize a New Uploader</div>
+              
+              <form id="authorize-form">
+                <div class="form-group">
+                  <label for="uploader-address">Uploader Wallet Address</label>
+                  <input 
+                    type="text" 
+                    id="uploader-address" 
+                    placeholder="Enter the uploader's Ethereum wallet address (0x...)" 
+                    required
+                  >
+                </div>
+                
+                <div class="form-group">
+                  <label for="patient-private-key">Your Private Key</label>
+                  <input 
+                    type="password" 
+                    id="patient-private-key" 
+                    placeholder="Enter your private key to authorize this transaction" 
+                    required
+                    value="0x98e863060b6803628e1e606e468fe1966dbd506fc13383a394314d89d3fd2ba4"
+                  >
+                  <small style="color: #777; font-size: 12px; margin-top: 5px; display: block;">
+                    Your private key is needed to sign the blockchain transaction. It is never sent to our servers.
+                  </small>
+                </div>
+                
+                <button type="submit" class="button button-secondary">Authorize Uploader</button>
+              </form>
+              
+              <div id="authorize-loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Authorizing uploader... This may take a few moments.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get elements
+      const loadingElement = document.getElementById('loading');
+      const mainContent = document.getElementById('main-content');
+      const userNameElement = document.getElementById('user-name');
+      const dashboardLink = document.getElementById('dashboard-link');
+      const uploaderTableBody = document.getElementById('uploader-table-body');
+      const emptyUploaders = document.getElementById('empty-uploaders');
+      const uploaderTableContainer = document.getElementById('uploader-table-container');
+      const authorizeForm = document.getElementById('authorize-form');
+      const authorizeLoading = document.getElementById('authorize-loading');
+      const successAlert = document.getElementById('success-alert');
+      const errorAlert = document.getElementById('error-alert');
+      
+      // Get patient ID from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const patientId = urlParams.get('id');
+      
+      // If no patient ID in URL, check localStorage
+      const storedPatientId = localStorage.getItem('patientId');
+      const currentPatientId = patientId || storedPatientId;
+      
+      // Update dashboard link with patient ID
+      if (currentPatientId) {
+        dashboardLink.href = `/patient/dashboard?id=${currentPatientId}`;
+      }
+      
+      // If no patient ID is found, redirect to login
+      if (!currentPatientId) {
+        window.location.href = '/patient/login.html';
+        return;
+      }
+      
+      // Store patient ID in localStorage for future use
+      localStorage.setItem('patientId', currentPatientId);
+      
+      // Fetch patient data and authorized uploaders
+      fetchData();
+      
+      async function fetchData() {
+        try {
+          // Fetch patient data
+          const patientResponse = await fetch(`/api/patient/${currentPatientId}`);
+          
+          if (!patientResponse.ok) {
+            throw new Error('Failed to fetch patient data');
+          }
+          
+          const patientData = await patientResponse.json();
+          userNameElement.textContent = patientData.fullName;
+          
+          // For now, we'll use mock data for the uploaders since the actual API endpoint isn't created yet
+          // In a real implementation, you would fetch from an API like:
+          // const uploadersResponse = await fetch(`/api/patient/authorized-uploaders/${currentPatientId}`);
+          
+          // Mock data for development purposes
+          const mockUploaders = [
+            // Empty array for now - will show the empty state
+          ];
+          
+          // Display the uploaders
+          if (mockUploaders && mockUploaders.length > 0) {
+            emptyUploaders.style.display = 'none';
+            uploaderTableContainer.style.display = 'block';
+            
+            // Clear existing rows
+            uploaderTableBody.innerHTML = '';
+            
+            // Add uploader rows
+            mockUploaders.forEach(uploader => {
+              const row = document.createElement('tr');
+              row.innerHTML = `
+                <td>${uploader.address}</td>
+                <td>
+                  <button class="button button-sm button-danger" 
+                    data-uploader="${uploader.address}">Remove Uploader</button>
+                </td>
+              `;
+              uploaderTableBody.appendChild(row);
+            });
+            
+            // Add event listeners to remove buttons
+            document.querySelectorAll('.button-danger').forEach(button => {
+              button.addEventListener('click', function() {
+                const uploaderAddress = this.getAttribute('data-uploader');
+                removeUploader(uploaderAddress);
+              });
+            });
+            
+          } else {
+            emptyUploaders.style.display = 'block';
+            uploaderTableContainer.style.display = 'none';
+          }
+          
+          // Show content
+          loadingElement.style.display = 'none';
+          mainContent.style.display = 'block';
+          
+        } catch (error) {
+          console.error('Error fetching data:', error);
+          window.location.href = '/patient/login.html?error=fetch_error';
+        }
+      }
+      
+      // Tab handling
+      document.querySelectorAll('.tab-button').forEach(button => {
+        button.addEventListener('click', function() {
+          // Remove active class from all buttons and content
+          document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          
+          // Add active class to clicked button and corresponding content
+          this.classList.add('active');
+          const tabId = this.getAttribute('data-tab');
+          document.getElementById(`${tabId}-tab`).classList.add('active');
+        });
+      });
+      
+      // Authorize uploader form submission
+      authorizeForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const uploaderAddress = document.getElementById('uploader-address').value;
+        const privateKey = document.getElementById('patient-private-key').value;
+        
+        if (!uploaderAddress || !privateKey) {
+          showError('Please fill in all fields');
+          return;
+        }
+        
+        // Show loading and hide form
+        authorizeForm.style.display = 'none';
+        authorizeLoading.style.display = 'flex';
+        
+        try {
+          const response = await fetch('/api/patient/authorize-uploader', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              patientId: currentPatientId,
+              patientPrivateKey: privateKey,
+              uploaderAddress: uploaderAddress
+            })
+          });
+          
+          const result = await response.json();
+          
+          if (response.ok) {
+            showSuccess(`Uploader ${uploaderAddress} authorized successfully!`);
+            // Refresh the uploader list
+            fetchData();
+            // Reset form
+            document.getElementById('uploader-address').value = '';
+            // Switch to authorized tab
+            document.querySelector('.tab-button[data-tab="authorized"]').click();
+          } else {
+            showError(`Failed to authorize uploader: ${result.error}`);
+          }
+          
+        } catch (error) {
+          console.error('Error authorizing uploader:', error);
+          showError('An error occurred while authorizing the uploader');
+        }
+        
+        // Hide loading and show form
+        authorizeLoading.style.display = 'none';
+        authorizeForm.style.display = 'block';
+      });
+      
+      // Remove uploader access
+      async function removeUploader(uploaderAddress) {
+        const confirmed = confirm(`Are you sure you want to remove uploader ${uploaderAddress}?`);
+        
+        if (!confirmed) {
+          return;
+        }
+        
+        // Show loading
+        loadingElement.style.display = 'flex';
+        mainContent.style.display = 'none';
+        
+        try {
+          const response = await fetch('/api/patient/remove-uploader', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              patientId: currentPatientId,
+              patientPrivateKey: "0x98e863060b6803628e1e606e468fe1966dbd506fc13383a394314d89d3fd2ba4", // Hard-coded for demo
+              uploaderAddress: uploaderAddress
+            })
+          });
+          
+          const result = await response.json();
+          
+          if (response.ok) {
+            showSuccess(`Uploader ${uploaderAddress} removed successfully!`);
+            // Refresh the uploader list
+            fetchData();
+          } else {
+            showError(`Failed to remove uploader: ${result.error}`);
+            // Show content again
+            loadingElement.style.display = 'none';
+            mainContent.style.display = 'block';
+          }
+          
+        } catch (error) {
+          console.error('Error removing uploader:', error);
+          showError('An error occurred while removing the uploader');
+          // Show content again
+          loadingElement.style.display = 'none';
+          mainContent.style.display = 'block';
+        }
+      }
+      
+      // Logout handler
+      document.getElementById('logout-btn').addEventListener('click', function() {
+        localStorage.removeItem('patientId');
+        window.location.href = '/';
+      });
+      
+      // Show success alert
+      function showSuccess(message) {
+        successAlert.textContent = message;
+        successAlert.style.display = 'block';
+        
+        // Hide after 5 seconds
+        setTimeout(() => {
+          successAlert.style.display = 'none';
+        }, 5000);
+      }
+      
+      // Show error alert
+      function showError(message) {
+        errorAlert.textContent = message;
+        errorAlert.style.display = 'block';
+        
+        // Hide after 5 seconds
+        setTimeout(() => {
+          errorAlert.style.display = 'none';
+        }, 5000);
+      }
+    });
+  </script>
+</body>
+</html>

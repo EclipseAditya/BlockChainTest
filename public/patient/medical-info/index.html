@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Medical Information - Medical Records Blockchain</title>
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --secondary-color: #2ecc71;
+      --error-color: #e74c3c;
+      --warning-color: #f39c12;
+      --text-color: #333;
+      --light-gray: #f5f5f5;
+      --border-color: #ddd;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: var(--text-color);
+      background-color: #f9f9f9;
+    }
+    
+    .container {
+      max-width: 700px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    header h1 {
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+    
+    header p {
+      color: #666;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      margin-bottom: 20px;
+    }
+    
+    .progress-container {
+      margin-bottom: 30px;
+    }
+    
+    .progress-bar {
+      width: 100%;
+      background-color: var(--light-gray);
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    
+    .progress-bar-fill {
+      height: 100%;
+      background-color: var(--secondary-color);
+      width: 50%;
+      transition: width 0.3s ease;
+    }
+    
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+    
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .radio-group {
+      display: flex;
+      gap: 20px;
+      margin-top: 10px;
+    }
+    
+    .radio-option {
+      display: flex;
+      align-items: center;
+    }
+    
+    .radio-option input {
+      margin-right: 8px;
+    }
+    
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      transition: background-color 0.3s;
+    }
+    
+    button:hover {
+      background-color: #2980b9;
+    }
+    
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+    
+    .back-button {
+      background-color: var(--light-gray);
+      color: var(--text-color);
+    }
+    
+    .back-button:hover {
+      background-color: #e0e0e0;
+    }
+    
+    .next-button {
+      background-color: var(--secondary-color);
+    }
+    
+    .next-button:hover {
+      background-color: #27ae60;
+    }
+    
+    .error {
+      display: none;
+      color: var(--error-color);
+      background-color: #fdeaea;
+      border-left: 4px solid var(--error-color);
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .info {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #e8f4fd;
+      border-left: 4px solid var(--primary-color);
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .back-link {
+      display: inline-block;
+      margin-top: 20px;
+      color: #666;
+      text-decoration: none;
+    }
+    
+    .back-link:hover {
+      color: var(--primary-color);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Basic Medical Information</h1>
+      <p>Please provide your basic medical details</p>
+    </header>
+    
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div class="progress-bar-fill"></div>
+      </div>
+      <div class="progress-text">
+        <span>Step 2 of 3</span>
+        <span>Medical Information</span>
+      </div>
+    </div>
+    
+    <div class="error" id="errorMessage"></div>
+    
+    <div class="card">
+      <form id="medicalInfoForm">
+        <input type="hidden" id="aadhaarNumber" name="aadhaarNumber">
+        
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input 
+            type="text" 
+            id="fullName" 
+            name="fullName" 
+            placeholder="Enter your full name"
+            required
+          >
+        </div>
+        
+        <div class="form-group">
+          <label for="age">Age</label>
+          <input 
+            type="number" 
+            id="age" 
+            name="age" 
+            placeholder="Enter your age"
+            min="1"
+            max="120"
+            required
+          >
+        </div>
+        
+        <div class="form-group">
+          <label>Gender</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="gender" value="male" required>
+              Male
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="gender" value="female">
+              Female
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="gender" value="other">
+              Other
+            </label>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="bloodGroup">Blood Group</label>
+          <select id="bloodGroup" name="bloodGroup" required>
+            <option value="" disabled selected>Select your blood group</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+            <option value="unknown">Unknown</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="allergies">Allergies (if any)</label>
+          <textarea 
+            id="allergies" 
+            name="allergies" 
+            placeholder="List any allergies you have, separated by commas. Leave blank if none."
+          ></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="medicalConditions">Pre-existing Medical Conditions (if any)</label>
+          <textarea 
+            id="medicalConditions" 
+            name="medicalConditions" 
+            placeholder="List any pre-existing medical conditions, separated by commas. Leave blank if none."
+          ></textarea>
+        </div>
+        
+        <div class="info">
+          <p>This information will be used to create your patient profile. It will not be directly stored on the blockchain. Only the cryptographic references to your medical records will be on the blockchain.</p>
+        </div>
+        
+        <div class="button-container">
+          <button type="button" class="back-button" id="backButton">Back</button>
+          <button type="submit" class="next-button">Continue</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const medicalInfoForm = document.getElementById('medicalInfoForm');
+      const errorMessage = document.getElementById('errorMessage');
+      const backButton = document.getElementById('backButton');
+      const aadhaarInput = document.getElementById('aadhaarNumber');
+      
+      // Get Aadhaar number from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const aadhaarNumber = urlParams.get('aadhaar');
+      
+      // Validate Aadhaar number exists
+      if (!aadhaarNumber || !/^[0-9]{12}$/.test(aadhaarNumber)) {
+        showError('Invalid Aadhaar number. Please go back and try again.');
+        return;
+      }
+      
+      // Set Aadhaar number in hidden field
+      aadhaarInput.value = aadhaarNumber;
+      
+      // Handle back button
+      backButton.addEventListener('click', function() {
+        window.location.href = `/patient/login`;
+      });
+      
+      // Handle form submission
+      medicalInfoForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Validate age
+        const age = document.getElementById('age').value;
+        if (age < 1 || age > 120) {
+          showError('Please enter a valid age between 1 and 120');
+          return;
+        }
+        
+        // Collect form data
+        const formData = new FormData(medicalInfoForm);
+        const patientData = {
+          aadhaarNumber: formData.get('aadhaarNumber'),
+          fullName: formData.get('fullName'),
+          age: formData.get('age'),
+          gender: formData.get('gender'),
+          bloodGroup: formData.get('bloodGroup'),
+          allergies: formData.get('allergies') || 'None',
+          medicalConditions: formData.get('medicalConditions') || 'None'
+        };
+        
+        // Submit data to the server
+        submitPatientData(patientData);
+      });
+      
+      // Function to submit data to server
+      async function submitPatientData(patientData) {
+        try {
+          const response = await fetch('/api/patient/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(patientData)
+          });
+          
+          const data = await response.json();
+          
+          if (!response.ok) {
+            throw new Error(data.error || 'Failed to register patient');
+          }
+          
+          // Redirect to confirmation page with patient ID
+          window.location.href = `/patient/confirmation?id=${data.patientId}`;
+          
+        } catch (error) {
+          showError(error.message || 'An error occurred. Please try again.');
+        }
+      }
+      
+      // Function to show error
+      function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+        window.scrollTo(0, 0);
+      }
+    });
+  </script>
+</body>
+</html> 
+ 

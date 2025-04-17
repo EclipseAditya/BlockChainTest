@@ -1,0 +1,56 @@
+{
+  "name": "medical-records-blockchain",
+  "version": "1.0.0",
+  "description": "Blockchain-based medical records system",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "truffle test",
+    "compile": "truffle compile",
+    "migrate": "truffle migrate",
+    "add-record": "node scripts/addMedicalRecord.js",
+    "get-records": "node scripts/getMedicalRecords.js",
+    "authorize-doctor": "node scripts/authorizeDoctor.js",
+    "revoke-doctor": "node scripts/revokeDoctor.js",
+    "accounts": "node scripts/getAccounts.js",
+    "patient-grant": "node scripts/patientGrantAccess.js",
+    "patient-revoke": "node scripts/patientRevokeAccess.js",
+    "patient-authorize-uploader": "node scripts/patientAuthorizeUploader.js",
+    "patient-remove-uploader": "node scripts/patientRemoveUploader.js",
+    "patient-list-doctors": "node scripts/patientListAuthorizedDoctors.js",
+    "doctor-check-access": "node scripts/doctorCheckAccess.js",
+    "upload-to-ipfs": "node scripts/uploadToPinata.js",
+    "add-ipfs-records": "node scripts/addIPFSRecords.js",
+    "start-frontend": "node server.js",
+    "import-patients": "node scripts/importPatientsToFirebase.js",
+    "migrate-patient-accounts": "node scripts/migratePatientAccounts.js"
+  },
+  "keywords": [
+    "blockchain",
+    "ethereum",
+    "medical",
+    "records",
+    "healthcare",
+    "truffle",
+    "ipfs"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@truffle/hdwallet-provider": "^1.5.0",
+    "axios": "^0.27.2",
+    "dotenv": "^16.0.3",
+    "express": "^4.17.3",
+    "firebase": "^9.6.8",
+    "firebase-admin": "^13.2.0",
+    "form-data": "^4.0.0",
+    "mkdirp": "^3.0.1",
+    "multer": "^1.4.5-lts.1",
+    "web3": "^1.7.1"
+  },
+  "devDependencies": {
+    "ganache-cli": "^6.12.2"
+  }
+} 

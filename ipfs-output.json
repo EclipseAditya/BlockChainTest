@@ -1,0 +1,11 @@
+{
+  "patientID": "0123456789",
+  "records": [
+    {
+      "recordID": "BT20240515",
+      "recordType": "Blood Test",
+      "sha256Hash": "0xb4f035ed983b0df8d592b335b03f4d49712315e0e30b0d78211dd43fa7010f19",
+      "cid": "QmPWkBaSPFGjseUTzvWrxvR3y6MHsDZmePBDn2FtxMBygH"
+    }
+  ]
+}

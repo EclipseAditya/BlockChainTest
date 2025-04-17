@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Confirmation | Medical Records Blockchain</title>
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --primary-dark: #2980b9;
+      --secondary-color: #2ecc71;
+      --secondary-dark: #27ae60;
+      --error-color: #e74c3c;
+      --text-color: #333;
+      --light-gray: #f4f6f9;
+      --border-color: #ddd;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: var(--light-gray);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      margin-bottom: 20px;
+    }
+    
+    h1, h2 {
+      color: var(--primary-color);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    .steps {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+    
+    .step {
+      text-align: center;
+      flex: 1;
+      position: relative;
+    }
+    
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: var(--light-gray);
+      color: var(--text-color);
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    .step.active .step-number {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .step.completed .step-number {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+    
+    .step-label {
+      font-size: 0.85rem;
+      color: #777;
+    }
+    
+    .step.active .step-label {
+      color: var(--primary-color);
+      font-weight: bold;
+    }
+    
+    .step.completed .step-label {
+      color: var(--secondary-color);
+    }
+    
+    .step-connector {
+      position: absolute;
+      top: 15px;
+      right: -50%;
+      width: 100%;
+      height: 2px;
+      background-color: var(--light-gray);
+      z-index: -1;
+    }
+    
+    .step.completed .step-connector {
+      background-color: var(--secondary-color);
+    }
+    
+    .step:last-child .step-connector {
+      display: none;
+    }
+    
+    .button {
+      display: inline-block;
+      background-color: var(--primary-color);
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+      text-align: center;
+      text-decoration: none;
+      margin-top: 20px;
+    }
+    
+    .button:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .button-secondary {
+      background-color: var(--secondary-color);
+    }
+    
+    .button-secondary:hover {
+      background-color: var(--secondary-dark);
+    }
+    
+    .button-text {
+      background: none;
+      color: var(--primary-color);
+      border: none;
+      padding: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: underline;
+    }
+    
+    .button-text:hover {
+      color: var(--primary-dark);
+    }
+    
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background-color: var(--secondary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .success-icon svg {
+      width: 40px;
+      height: 40px;
+      color: white;
+    }
+    
+    .success-message {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .success-message h2 {
+      color: var(--secondary-color);
+      margin-bottom: 10px;
+    }
+    
+    .patient-details {
+      background-color: var(--light-gray);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .detail-item {
+      margin-bottom: 15px;
+      display: flex;
+      align-items: flex-start;
+    }
+    
+    .detail-item:last-child {
+      margin-bottom: 0;
+    }
+    
+    .detail-label {
+      font-weight: bold;
+      width: 170px;
+      color: #666;
+    }
+    
+    .detail-value {
+      flex: 1;
+      word-break: break-all;
+    }
+    
+    .highlight-box {
+      background-color: #fff8e1;
+      border-left: 4px solid #ffc107;
+      padding: 15px;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+    
+    .highlight-box strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #333;
+    }
+    
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 0;
+    }
+    
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-left-color: var(--primary-color);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .error-message {
+      text-align: center;
+      color: var(--error-color);
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="steps">
+        <div class="step completed">
+          <div class="step-number">1</div>
+          <div class="step-connector"></div>
+          <div class="step-label">Aadhaar Verification</div>
+        </div>
+        <div class="step completed">
+          <div class="step-number">2</div>
+          <div class="step-connector"></div>
+          <div class="step-label">Medical Information</div>
+        </div>
+        <div class="step completed active">
+          <div class="step-number">3</div>
+          <div class="step-label">Get Patient ID</div>
+        </div>
+      </div>
+      
+      <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Loading your details...</p>
+      </div>
+      
+      <div id="error-message" class="error-message">
+        <h2>Error</h2>
+        <p>Failed to retrieve patient details. Please try again later.</p>
+        <a href="/" class="button">Back to Home</a>
+      </div>
+      
+      <div id="success-content" style="display: none;">
+        <div class="success-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        
+        <div class="success-message">
+          <h2>Registration Complete!</h2>
+          <p>Your patient registration was successful.</p>
+        </div>
+        
+        <div class="patient-details">
+          <div class="detail-item">
+            <div class="detail-label">Patient ID:</div>
+            <div class="detail-value" id="patient-id">-</div>
+          </div>
+          
+          <div class="detail-item">
+            <div class="detail-label">Wallet Address:</div>
+            <div class="detail-value" id="wallet-address">-</div>
+          </div>
+          
+          <div class="detail-item">
+            <div class="detail-label">Private Key:</div>
+            <div class="detail-value">0x98e863060b6803628e1e606e468fe1966dbd506fc13383a394314d89d3fd2ba4</div>
+          </div>
+          
+          <div class="detail-item">
+            <div class="detail-label">Registration Date:</div>
+            <div class="detail-value" id="registration-date">-</div>
+          </div>
+        </div>
+        
+        <div class="highlight-box">
+          <strong>Important:</strong>
+          <p>Please save your Patient ID, Wallet Address, and Private Key. You will need them to access your medical records in the future.</p>
+        </div>
+
+        <div class="form-wrapper" id="password-form-wrapper">
+          <h3 style="margin: 20px 0 15px; color: var(--primary-color);">Create a Password</h3>
+          <p style="margin-bottom: 15px; font-size: 14px;">Create a password to secure your account. You'll use your Patient ID and this password to login.</p>
+          
+          <form id="password-form">
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input 
+                type="password" 
+                id="password"
+                placeholder="Enter a secure password" 
+                required
+                minlength="8"
+              >
+              <p class="info-text">Password must be at least 8 characters long</p>
+            </div>
+            
+            <div class="form-group">
+              <label for="confirm-password">Confirm Password</label>
+              <input 
+                type="password" 
+                id="confirm-password"
+                placeholder="Confirm your password" 
+                required
+                minlength="8"
+              >
+              <p id="password-error" class="error-message">Passwords do not match</p>
+            </div>
+            
+            <button type="submit" id="set-password-button" class="button button-secondary">Set Password & Continue</button>
+          </form>
+          
+          <div id="password-loading" style="display: none;" class="loading">
+            <div class="spinner"></div>
+            <p>Setting your password...</p>
+          </div>
+        </div>
+        
+        <a href="/" class="button" id="home-button" style="display: none;">Back to Home</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const loadingElement = document.getElementById('loading');
+      const errorElement = document.getElementById('error-message');
+      const successElement = document.getElementById('success-content');
+      
+      const patientIdElement = document.getElementById('patient-id');
+      const walletAddressElement = document.getElementById('wallet-address');
+      const registrationDateElement = document.getElementById('registration-date');
+      
+      // Get patient ID from URL parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const patientId = urlParams.get('patientId');
+      
+      if (!patientId) {
+        // No patient ID provided, show error
+        loadingElement.style.display = 'none';
+        errorElement.style.display = 'block';
+        return;
+      }
+      
+      // Fetch patient details from the server
+      async function fetchPatientDetails() {
+        try {
+          const response = await fetch(`/api/patient/${patientId}`);
+          
+          if (!response.ok) {
+            throw new Error('Failed to fetch patient details');
+          }
+          
+          const patientData = await response.json();
+          
+          // Format registration date
+          const regDate = new Date(patientData.registrationDate);
+          const formattedDate = new Intl.DateTimeFormat('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          }).format(regDate);
+          
+          // Update the UI with patient details
+          patientIdElement.textContent = patientData.patientId;
+          walletAddressElement.textContent = patientData.walletAddress;
+          registrationDateElement.textContent = formattedDate;
+          
+          // Show success content
+          loadingElement.style.display = 'none';
+          successElement.style.display = 'block';
+          
+        } catch (error) {
+          console.error('Error fetching patient details:', error);
+          
+          // Show error message
+          loadingElement.style.display = 'none';
+          errorElement.style.display = 'block';
+        }
+      }
+      
+      // Fetch patient details
+      fetchPatientDetails();
+
+      // Password form handling
+      const passwordForm = document.getElementById('password-form');
+      const passwordFormWrapper = document.getElementById('password-form-wrapper');
+      const passwordLoading = document.getElementById('password-loading');
+      const passwordError = document.getElementById('password-error');
+      const homeButton = document.getElementById('home-button');
+      
+      passwordForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+        
+        // Validate passwords match
+        if (password !== confirmPassword) {
+          passwordError.style.display = 'block';
+          return;
+        }
+        
+        // Hide error if previously shown
+        passwordError.style.display = 'none';
+        
+        // Show loading
+        passwordForm.style.display = 'none';
+        passwordLoading.style.display = 'block';
+        
+        try {
+          // Send password to server
+          const response = await fetch('/api/patient/set-password', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              patientId,
+              password
+            })
+          });
+          
+          const result = await response.json();
+          
+          if (response.ok) {
+            // Success - hide form and show home button
+            passwordFormWrapper.innerHTML = `
+              <div style="text-align: center; padding: 20px;">
+                <div class="success-icon" style="width: 50px; height: 50px; margin-bottom: 15px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h3 style="color: var(--secondary-color); margin-bottom: 10px;">Password Set Successfully!</h3>
+                <p>You can now login using your Patient ID and password.</p>
+              </div>
+            `;
+            homeButton.style.display = 'block';
+          } else {
+            // Error
+            passwordForm.style.display = 'block';
+            passwordLoading.style.display = 'none';
+            alert(`Failed to set password: ${result.error}`);
+          }
+        } catch (error) {
+          console.error('Error setting password:', error);
+          passwordForm.style.display = 'block';
+          passwordLoading.style.display = 'none';
+          alert('Failed to set password. Please try again.');
+        }
+      });
+    });
+  </script>
+</body>
+</html> 
+ 

@@ -1,0 +1,23 @@
+{
+  "patientAddress": "0x385df551b78d97c527c72e999aa7fcbb915c30c59e38e85f26e850e21aeed754",
+  "records": [
+    {
+      "recordID": "BT20230501",
+      "recordType": "Blood Test",
+      "sha256Hash": "0x8d87c72ea6d9577d5721e375f4c84f979580dcb3f5a4254ce612665d8873fd5e",
+      "cid": "QmX6j9DHcPhgBcBtZsuRkfmk8iAboKwLwfgvwZFWEJ7VTo"
+    },
+    {
+      "recordID": "XR20230505",
+      "recordType": "X-Ray",
+      "sha256Hash": "0x2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae",
+      "cid": "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG"
+    },
+    {
+      "recordID": "PR20230510",
+      "recordType": "Prescription",
+      "sha256Hash": "0xfcde2b2edba56bf408601fb721fe9b5c338d10ee429ea04fae5511b68fbf8fb9",
+      "cid": "QmeKTS2fMsYRrBJSzEwsQXnzM4dVKUJxzKPhdJpWsdmhYF"
+    }
+  ]
+} 

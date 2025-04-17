@@ -1,0 +1,13 @@
+{
+  "name": "patient-firebase-db",
+  "version": "1.0.0",
+  "description": "Patient management system with Firebase",
+  "main": "importPatients.js",
+  "type": "module",
+  "scripts": {
+    "import": "node importPatients.js"
+  },
+  "dependencies": {
+    "firebase": "^10.6.0"
+  }
+} 

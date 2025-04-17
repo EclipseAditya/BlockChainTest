@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Medical Records</title>
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --secondary-color: #2ecc71;
+      --error-color: #e74c3c;
+      --warning-color: #f39c12;
+      --text-color: #333;
+      --light-gray: #f5f5f5;
+      --border-color: #ddd;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: var(--text-color);
+      background-color: #f9f9f9;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    header h1 {
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+    
+    header p {
+      color: #666;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .patient-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .patient-details {
+      flex: 1;
+      min-width: 280px;
+    }
+    
+    .patient-id {
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+    
+    .patient-address {
+      font-family: monospace;
+      background-color: var(--light-gray);
+      padding: 5px 8px;
+      border-radius: 4px;
+      font-size: 14px;
+      word-break: break-all;
+      margin-top: 5px;
+    }
+    
+    .patient-stats {
+      background-color: var(--light-gray);
+      border-radius: 8px;
+      padding: 15px;
+      min-width: 200px;
+      margin-top: 10px;
+    }
+    
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    
+    .stat-row:last-child {
+      margin-bottom: 0;
+    }
+    
+    .stat-label {
+      color: #666;
+    }
+    
+    .stat-value {
+      font-weight: 500;
+    }
+    
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 40px 0;
+    }
+    
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-left-color: var(--primary-color);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin-right: 10px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .error-message {
+      background-color: #fdeaea;
+      border-left: 4px solid var(--error-color);
+      padding: 15px;
+      margin: 20px 0;
+      color: var(--error-color);
+    }
+    
+    .records-container {
+      margin-top: 30px;
+    }
+    
+    .section-title {
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: var(--primary-color);
+      font-weight: 500;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+    }
+    
+    .records-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    
+    .record-card {
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .record-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .record-header {
+      padding: 15px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .record-type {
+      font-weight: 500;
+      color: var(--primary-color);
+      margin-bottom: 5px;
+    }
+    
+    .record-id {
+      font-family: monospace;
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .record-body {
+      padding: 15px;
+    }
+    
+    .record-date {
+      margin-bottom: 10px;
+      color: #666;
+    }
+    
+    .record-cid {
+      font-family: monospace;
+      background-color: var(--light-gray);
+      padding: 8px;
+      border-radius: 4px;
+      font-size: 13px;
+      word-break: break-all;
+      margin: 10px 0;
+    }
+    
+    .record-actions {
+      padding: 15px;
+      background-color: #f8f9fa;
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid var(--border-color);
+    }
+    
+    .record-button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    
+    .record-button:hover {
+      background-color: #2980b9;
+    }
+    
+    .no-records {
+      text-align: center;
+      padding: 40px 20px;
+      color: #666;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .no-records p {
+      margin-bottom: 15px;
+    }
+    
+    .back-link {
+      display: inline-block;
+      margin-top: 20px;
+      color: #666;
+      text-decoration: none;
+    }
+    
+    .back-link:hover {
+      color: var(--primary-color);
+    }
+    
+    .tag {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      margin-right: 5px;
+    }
+    
+    .tag-prescription {
+      background-color: #e8f5e9;
+      color: var(--secondary-color);
+    }
+    
+    .tag-xray {
+      background-color: #e3f2fd;
+      color: var(--primary-color);
+    }
+    
+    .tag-bloodtest {
+      background-color: #fff8e1;
+      color: var(--warning-color);
+    }
+    
+    .tag-mri,
+    .tag-ctscan {
+      background-color: #f3e5f5;
+      color: #9c27b0;
+    }
+    
+    .tag-note {
+      background-color: #f5f5f5;
+      color: #607d8b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Patient Medical Records</h1>
+      <p>View and manage medical records for this patient</p>
+    </header>
+    
+    <div class="card">
+      <div class="patient-info">
+        <div class="patient-details">
+          <div class="patient-id" id="patientId">Loading patient information...</div>
+          <div class="patient-address" id="patientAddress"></div>
+        </div>
+        <div class="patient-stats">
+          <div class="stat-row">
+            <div class="stat-label">Total Records:</div>
+            <div class="stat-value" id="totalRecords">-</div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-label">Latest Upload:</div>
+            <div class="stat-value" id="latestUpload">-</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="loading" id="loadingIndicator">
+        <div class="spinner"></div>
+        <p>Loading patient records...</p>
+      </div>
+      
+      <div class="error-message" id="errorMessage" style="display: none;"></div>
+    </div>
+    
+    <div class="records-container" id="recordsContainer" style="display: none;">
+      <h2 class="section-title">Medical Records</h2>
+      <div class="records-grid" id="recordsGrid"></div>
+    </div>
+    
+    <div class="no-records" id="noRecords" style="display: none;">
+      <p>No medical records found for this patient.</p>
+      <p>You can upload a new record from the <a href="#" id="uploadLink">upload page</a>.</p>
+    </div>
+    
+    <a href="/doctor/patients" class="back-link">&larr; Back to Patient List</a>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // DOM Elements
+      const patientId = document.getElementById('patientId');
+      const patientAddress = document.getElementById('patientAddress');
+      const totalRecords = document.getElementById('totalRecords');
+      const latestUpload = document.getElementById('latestUpload');
+      const loadingIndicator = document.getElementById('loadingIndicator');
+      const errorMessage = document.getElementById('errorMessage');
+      const recordsContainer = document.getElementById('recordsContainer');
+      const recordsGrid = document.getElementById('recordsGrid');
+      const noRecords = document.getElementById('noRecords');
+      const uploadLink = document.getElementById('uploadLink');
+      
+      // Get patient address from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const patientParam = urlParams.get('patient');
+      
+      // Update upload link with patient address
+      if (patientParam) {
+        uploadLink.href = `/doctor/uploads?patient=${patientParam}`;
+        
+        // Set patient address in the UI
+        patientAddress.textContent = patientParam;
+        
+        // Load patient records
+        loadPatientRecords(patientParam);
+      } else {
+        showError('No patient address specified. Please go back and select a patient.');
+        loadingIndicator.style.display = 'none';
+      }
+      
+      // Function to load patient records
+      async function loadPatientRecords(patientAddress) {
+        try {
+          // Simulate API call to get patient records
+          // In a real application, you would make an actual API call to the backend
+          const records = await simulateGetPatientRecords(patientAddress);
+          
+          // Hide loading indicator
+          loadingIndicator.style.display = 'none';
+          
+          // Update patient information
+          if (records.patientId) {
+            patientId.textContent = `Patient ID: ${records.patientId}`;
+          } else {
+            patientId.textContent = 'Unknown Patient';
+          }
+          
+          // Update stats
+          totalRecords.textContent = records.records ? records.records.length : 0;
+          
+          if (records.records && records.records.length > 0) {
+            // Sort records by date, most recent first
+            records.records.sort((a, b) => {
+              return new Date(b.uploadDate) - new Date(a.uploadDate);
+            });
+            
+            // Set latest upload date
+            if (records.records[0].uploadDate) {
+              latestUpload.textContent = new Date(records.records[0].uploadDate).toLocaleDateString();
+            }
+            
+            // Display records
+            displayRecords(records.records);
+          } else {
+            // No records found
+            noRecords.style.display = 'block';
+          }
+        } catch (error) {
+          showError('Failed to load patient records: ' + error.message);
+        }
+      }
+      
+      // Function to display records
+      function displayRecords(records) {
+        if (!records || records.length === 0) {
+          noRecords.style.display = 'block';
+          return;
+        }
+        
+        // Show records container
+        recordsContainer.style.display = 'block';
+        
+        // Create record cards
+        records.forEach(record => {
+          const recordCard = document.createElement('div');
+          recordCard.className = 'record-card';
+          
+          // Create tag class based on record type
+          const tagClass = getTagClass(record.recordType);
+          
+          // Format date for display
+          const formattedDate = formatDate(record.diagnosisDate);
+          
+          recordCard.innerHTML = `
+            <div class="record-header">
+              <div class="record-type">
+                <span class="tag ${tagClass}">${record.recordType}</span>
+              </div>
+              <div class="record-id">${record.recordId}</div>
+            </div>
+            <div class="record-body">
+              <div class="record-date">
+                <strong>Diagnosis Date:</strong> ${formattedDate}
+              </div>
+              <div>
+                <strong>IPFS CID:</strong>
+                <div class="record-cid">${record.cid}</div>
+              </div>
+            </div>
+            <div class="record-actions">
+              <a href="https://gateway.pinata.cloud/ipfs/${record.cid}" target="_blank" class="record-button">View on IPFS</a>
+              <a href="#" class="record-button" onclick="alert('Download functionality will be added in a future update')">Download</a>
+            </div>
+          `;
+          
+          recordsGrid.appendChild(recordCard);
+        });
+      }
+      
+      // Function to show error message
+      function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+      }
+      
+      // Function to get tag class based on record type
+      function getTagClass(recordType) {
+        const type = recordType.toLowerCase().replace(/\s+/g, '');
+        
+        switch(type) {
+          case 'prescription':
+            return 'tag-prescription';
+          case 'x-ray':
+          case 'xray':
+            return 'tag-xray';
+          case 'bloodtest':
+            return 'tag-bloodtest';
+          case 'mri':
+            return 'tag-mri';
+          case 'ctscan':
+            return 'tag-ctscan';
+          case 'doctorsnote':
+            return 'tag-note';
+          default:
+            return '';
+        }
+      }
+      
+      // Function to format date string from ddmmyyyy to readable format
+      function formatDate(dateStr) {
+        if (!dateStr) return 'Unknown Date';
+        
+        // If dateStr is already a Date object
+        if (dateStr instanceof Date) {
+          return dateStr.toLocaleDateString();
+        }
+        
+        // Handle different date formats
+        if (dateStr.includes('/') || dateStr.includes('-')) {
+          return new Date(dateStr).toLocaleDateString();
+        }
+        
+        // Handle ddmmyyyy format
+        if (dateStr.length === 8) {
+          const day = dateStr.substring(0, 2);
+          const month = dateStr.substring(2, 4);
+          const year = dateStr.substring(4, 8);
+          
+          return new Date(`${year}-${month}-${day}`).toLocaleDateString();
+        }
+        
+        return dateStr;
+      }
+      
+      // Simulate getting patient records
+      // In a real application, this would be an API call to the backend
+      async function simulateGetPatientRecords(patientAddress) {
+        // Simulate network delay
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Extract the last 4 chars of the address for the demo
+        const shortAddr = patientAddress.slice(-4);
+        
+        // Create dummy data
+        return {
+          patientId: `PAT${shortAddr}`,
+          patientAddress: patientAddress,
+          records: [
+            {
+              recordId: `PRE20230515${shortAddr}`,
+              recordType: 'Prescription',
+              diagnosisDate: '15052023',
+              cid: 'QmV9tSDx9UiPeWExXEeH6aoDvmihvx6jD5eLb4jbTaKGps',
+              sha256Hash: `0x8a35acfbc15ff81a39ae7d344fd709f28e8600b4aa8c65c6b64bfe7fe36bd19b`,
+              uploadDate: '2023-05-15T14:32:11Z'
+            },
+            {
+              recordId: `XRA20230428${shortAddr}`,
+              recordType: 'X-Ray',
+              diagnosisDate: '28042023',
+              cid: 'QmSgvgwxZGaBLqkGyLWtEMEo44QPx8NxMoXdpEuHCXbnEu',
+              sha256Hash: `0x71f920fa275127a7b40bc765136e2564e308a5e457ae757b1f09d95f13d1fe31`,
+              uploadDate: '2023-04-28T09:15:22Z'
+            },
+            {
+              recordId: `BLO20230317${shortAddr}`,
+              recordType: 'Blood Test',
+              diagnosisDate: '17032023',
+              cid: 'QmeEdP4V3rAz4w7AYZtHxu57yqFqQm1wRzdFwQmpJcitUv',
+              sha256Hash: `0x0e3a1c4e3c8c86ae98a1d4c03985efad3d340e38deabb16b23056ec5a0e1cd4b`,
+              uploadDate: '2023-03-17T11:42:55Z'
+            }
+          ]
+        };
+      }
+    });
+  </script>
+</body>
+</html> 
+ 
+ 

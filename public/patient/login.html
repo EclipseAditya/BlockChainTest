@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Login | Medical Records Blockchain</title>
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --primary-dark: #2980b9;
+      --secondary-color: #2ecc71;
+      --secondary-dark: #27ae60;
+      --error-color: #e74c3c;
+      --text-color: #333;
+      --light-gray: #f4f6f9;
+      --border-color: #ddd;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: var(--light-gray);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 450px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      margin-bottom: 20px;
+    }
+    
+    h1, h2 {
+      color: var(--primary-color);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: var(--text-color);
+    }
+    
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    }
+    
+    .button {
+      display: inline-block;
+      background-color: var(--primary-color);
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+      text-align: center;
+      transition: background-color 0.3s;
+    }
+    
+    .button:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .button-text {
+      background: none;
+      color: var(--primary-color);
+      border: none;
+      padding: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: underline;
+    }
+    
+    .button-text:hover {
+      color: var(--primary-dark);
+    }
+    
+    .error-message {
+      color: var(--error-color);
+      background-color: rgba(231, 76, 60, 0.1);
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 25px 0;
+    }
+    
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .divider span {
+      padding: 0 10px;
+      color: #777;
+      font-size: 14px;
+    }
+    
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-left-color: var(--primary-color);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .footer-links {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+    
+    .footer-links a {
+      color: var(--primary-color);
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/" class="button-text" style="position: absolute; top: 20px; left: 20px;">← Back to Home</a>
+    
+    <div class="card">
+      <h1>Patient Login</h1>
+      
+      <div id="error-message" class="error-message"></div>
+      
+      <form id="login-form">
+        <div class="form-group">
+          <label for="patient-id">Patient ID</label>
+          <input 
+            type="text" 
+            id="patient-id" 
+            placeholder="Enter your Patient ID" 
+            required
+          >
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input 
+            type="password" 
+            id="password" 
+            placeholder="Enter your password" 
+            required
+          >
+        </div>
+        
+        <button type="submit" class="button">Log In</button>
+      </form>
+      
+      <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Logging in...</p>
+      </div>
+      
+      <div class="divider">
+        <span>OR</span>
+      </div>
+      
+      <a href="/patient/login" class="button" style="background-color: var(--secondary-color);">Register with Aadhaar</a>
+    </div>
+    
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/patient/register">Register</a>
+      <a href="#">Help</a>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const loginForm = document.getElementById('login-form');
+      const errorMessage = document.getElementById('error-message');
+      const loadingElement = document.getElementById('loading');
+      
+      loginForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Get form values
+        const patientId = document.getElementById('patient-id').value.trim();
+        const password = document.getElementById('password').value;
+        
+        // Validate inputs
+        if (!patientId || !password) {
+          showError('Please enter both Patient ID and password');
+          return;
+        }
+        
+        // Hide error and show loading
+        errorMessage.style.display = 'none';
+        loginForm.style.display = 'none';
+        loadingElement.style.display = 'block';
+        
+        try {
+          // Send login request
+          const response = await fetch('/api/patient/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              patientId,
+              password
+            })
+          });
+          
+          const result = await response.json();
+          
+          if (response.ok) {
+            // Success - redirect to dashboard
+            window.location.href = `/patient/dashboard?id=${patientId}`;
+          } else {
+            // Error
+            showError(result.error || 'Login failed');
+            loginForm.style.display = 'block';
+            loadingElement.style.display = 'none';
+          }
+        } catch (error) {
+          console.error('Login error:', error);
+          showError('An error occurred. Please try again.');
+          loginForm.style.display = 'block';
+          loadingElement.style.display = 'none';
+        }
+      });
+      
+      function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html> 
+ 

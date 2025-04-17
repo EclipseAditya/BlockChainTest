@@ -1,0 +1,11 @@
+{
+  "patientAddress": "0xA82f28C0C8ee80Dab4Ffbc441C32Bff2bBd1A72C",
+  "records": [
+    {
+      "recordID": "X-R148117823",
+      "recordType": "X-Ray",
+      "sha256Hash": "0xcf9a2230abb924b920786267b21b8efa736c9808a9f3aed6480eb1e01a84c2b1",
+      "cid": "QmXfY7u32573aQ1WPxnQBJEpfo3FVccGFbU12aCqYzD6zc"
+    }
+  ]
+}

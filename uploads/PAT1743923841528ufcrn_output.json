@@ -1,0 +1,11 @@
+{
+  "patientID": "PAT1743923841528ufcrn",
+  "records": [
+    {
+      "recordID": "CT 173163150",
+      "recordType": "CT Scan",
+      "sha256Hash": "0xce589031204ef57a6de0a2be704d3bc05bdc4378fb69798d7c3e138c7ec1ab97",
+      "cid": "QmZRwRCWQVYVrhRvkE6C5c1KzXZ9iNoG1G9x7mNL5EkJNr"
+    }
+  ]
+}

@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Doctor Access | Medical Records Blockchain</title>
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --primary-dark: #2980b9;
+      --secondary-color: #2ecc71;
+      --secondary-dark: #27ae60;
+      --error-color: #e74c3c;
+      --warning-color: #f39c12;
+      --text-color: #333;
+      --light-gray: #f4f6f9;
+      --border-color: #ddd;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: var(--light-gray);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .logo {
+      color: var(--primary-color);
+      font-size: 24px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    
+    .user-menu {
+      display: flex;
+      align-items: center;
+    }
+    
+    .user-name {
+      margin-right: 15px;
+      font-weight: 500;
+    }
+    
+    .logout-btn {
+      background-color: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .logout-btn:hover {
+      background-color: #f1f1f1;
+    }
+    
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      gap: 20px;
+    }
+    
+    .sidebar {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+    
+    .sidebar-menu {
+      list-style: none;
+    }
+    
+    .sidebar-menu li {
+      margin-bottom: 10px;
+    }
+    
+    .sidebar-menu a {
+      display: block;
+      padding: 10px 15px;
+      color: var(--text-color);
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+    
+    .sidebar-menu a.active,
+    .sidebar-menu a:hover {
+      background-color: var(--light-gray);
+      color: var(--primary-color);
+    }
+    
+    .sidebar-menu a.active {
+      font-weight: 500;
+      border-left: 3px solid var(--primary-color);
+    }
+    
+    .content {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+    }
+    
+    .content-header {
+      margin-bottom: 20px;
+    }
+    
+    .content-header h1 {
+      color: var(--text-color);
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+    
+    .content-header p {
+      color: #777;
+      font-size: 14px;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border-color);
+    }
+    
+    .card-title {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 15px;
+      color: var(--primary-color);
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    }
+    
+    .button {
+      display: inline-block;
+      background-color: var(--primary-color);
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
+    
+    .button:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .button-secondary {
+      background-color: var(--secondary-color);
+    }
+    
+    .button-secondary:hover {
+      background-color: var(--secondary-dark);
+    }
+    
+    .button-sm {
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+    
+    .button-danger {
+      background-color: var(--error-color);
+    }
+    
+    .button-danger:hover {
+      background-color: #c0392b;
+    }
+    
+    .records-list {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    
+    .records-list th,
+    .records-list td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .records-list th {
+      font-weight: 500;
+      color: #777;
+      font-size: 13px;
+      background-color: var(--light-gray);
+    }
+    
+    .records-list tr:hover {
+      background-color: var(--light-gray);
+    }
+    
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 0;
+    }
+    
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-left-color: var(--primary-color);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+    }
+    
+    .empty-state svg {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+    
+    .empty-state h3 {
+      font-size: 18px;
+      color: #555;
+      margin-bottom: 10px;
+    }
+    
+    .empty-state p {
+      color: #777;
+      max-width: 400px;
+      margin: 0 auto 20px;
+    }
+    
+    .alert {
+      padding: 12px 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      display: none;
+    }
+    
+    .alert-success {
+      background-color: rgba(46, 204, 113, 0.2);
+      color: var(--secondary-color);
+      border: 1px solid rgba(46, 204, 113, 0.3);
+    }
+    
+    .alert-error {
+      background-color: rgba(231, 76, 60, 0.2);
+      color: var(--error-color);
+      border: 1px solid rgba(231, 76, 60, 0.3);
+    }
+    
+    .tab-buttons {
+      display: flex;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .tab-button {
+      padding: 10px 20px;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      font-size: 16px;
+      color: #777;
+      transition: all 0.3s;
+    }
+    
+    .tab-button.active {
+      border-bottom-color: var(--primary-color);
+      color: var(--primary-color);
+      font-weight: 500;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    @media (max-width: 768px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <a href="/" class="logo">Medical Records Blockchain</a>
+      <div class="user-menu">
+        <span class="user-name" id="user-name">Loading...</span>
+        <button class="logout-btn" id="logout-btn">Logout</button>
+      </div>
+    </header>
+    
+    <div class="main-content">
+      <div class="sidebar">
+        <ul class="sidebar-menu">
+          <li><a href="/patient/dashboard" id="dashboard-link">Dashboard</a></li>
+          <li><a href="/patient/records">My Records</a></li>
+          <li><a href="/patient/doctors" class="active">Authorized Doctors</a></li>
+          <li><a href="/patient/uploaders">Manage Uploaders</a></li>
+          <li><a href="/patient/settings">Account Settings</a></li>
+        </ul>
+      </div>
+      
+      <div class="content">
+        <div id="loading" class="loading">
+          <div class="spinner"></div>
+          <p>Loading doctor access data...</p>
+        </div>
+        
+        <div id="main-content" style="display: none;">
+          <div class="content-header">
+            <h1>Manage Doctor Access</h1>
+            <p>Control which doctors can access and upload your medical records</p>
+          </div>
+          
+          <div class="alert alert-success" id="success-alert"></div>
+          <div class="alert alert-error" id="error-alert"></div>
+          
+          <div class="tab-buttons">
+            <button class="tab-button active" data-tab="authorized">Authorized Doctors</button>
+            <button class="tab-button" data-tab="authorize">Authorize New Doctor</button>
+          </div>
+          
+          <div class="tab-content active" id="authorized-tab">
+            <div class="card">
+              <div class="card-title">Currently Authorized Doctors</div>
+              
+              <div id="doctor-list">
+                <!-- Doctor list will be inserted here -->
+                <div class="empty-state" id="empty-doctors" style="display: none;">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
+                  <h3>No Doctors Authorized</h3>
+                  <p>You haven't authorized any doctors yet. Use the "Authorize New Doctor" tab to grant access to a doctor.</p>
+                </div>
+                
+                <div id="doctor-table-container">
+                  <table class="records-list" id="doctor-table">
+                    <thead>
+                      <tr>
+                        <th>Doctor Name</th>
+                        <th>Doctor Address</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="doctor-table-body">
+                      <!-- Doctor rows will be added here -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="tab-content" id="authorize-tab">
+            <div class="card">
+              <div class="card-title">Authorize a New Doctor</div>
+              
+              <form id="authorize-form">
+                <div class="form-group">
+                  <label for="doctor-address">Doctor's Wallet Address</label>
+                  <input 
+                    type="text" 
+                    id="doctor-address" 
+                    placeholder="Enter the doctor's Ethereum wallet address (0x...)" 
+                    required
+                  >
+                </div>
+                
+                <div class="form-group">
+                  <label for="patient-private-key">Your Private Key</label>
+                  <input 
+                    type="password" 
+                    id="patient-private-key" 
+                    placeholder="Enter your private key to authorize this transaction" 
+                    required
+                  >
+                  <small style="color: #777; font-size: 12px; margin-top: 5px; display: block;">
+                    Your private key is needed to sign the blockchain transaction. It is never sent to our servers.
+                  </small>
+                </div>
+                
+                <button type="submit" class="button button-secondary">Authorize Doctor</button>
+              </form>
+              
+              <div id="authorize-loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Authorizing doctor... This may take a few moments.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get elements
+      const loadingElement = document.getElementById('loading');
+      const mainContent = document.getElementById('main-content');
+      const userNameElement = document.getElementById('user-name');
+      const dashboardLink = document.getElementById('dashboard-link');
+      const doctorTableBody = document.getElementById('doctor-table-body');
+      const emptyDoctors = document.getElementById('empty-doctors');
+      const doctorTableContainer = document.getElementById('doctor-table-container');
+      const authorizeForm = document.getElementById('authorize-form');
+      const authorizeLoading = document.getElementById('authorize-loading');
+      const successAlert = document.getElementById('success-alert');
+      const errorAlert = document.getElementById('error-alert');
+      
+      // Get patient ID from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const patientId = urlParams.get('id');
+      
+      // If no patient ID in URL, check localStorage
+      const storedPatientId = localStorage.getItem('patientId');
+      const currentPatientId = patientId || storedPatientId;
+      
+      // Update dashboard link with patient ID
+      if (currentPatientId) {
+        dashboardLink.href = `/patient/dashboard?id=${currentPatientId}`;
+      }
+      
+      // If no patient ID is found, redirect to login
+      if (!currentPatientId) {
+        window.location.href = '/patient/login.html';
+        return;
+      }
+      
+      // Store patient ID in localStorage for future use
+      localStorage.setItem('patientId', currentPatientId);
+      
+      // Fetch patient data and authorized doctors
+      fetchData();
+      
+      async function fetchData() {
+        try {
+          // Fetch patient data first to get private key
+          const patientResponse = await fetch(`/api/patient/${currentPatientId}`);
+          
+          if (!patientResponse.ok) {
+            throw new Error('Failed to fetch patient data');
+          }
+          
+          const patientData = await patientResponse.json();
+          userNameElement.textContent = patientData.fullName;
+          
+          // Get patient's private key for authorization
+          const privateKey = patientData.privateKey;
+          
+          if (!privateKey) {
+            showError('Private key not found. Please log in again.');
+            return;
+          }
+          
+          // Fetch authorized doctors WITH the required private key
+          const doctorsResponse = await fetch(`/api/patient/authorized-doctors/${currentPatientId}?privateKey=${encodeURIComponent(privateKey)}`);
+          
+          if (!doctorsResponse.ok) {
+            const errorData = await doctorsResponse.json();
+            throw new Error(`Failed to fetch authorized doctors: ${errorData.error || doctorsResponse.statusText}`);
+          }
+          
+          const doctorsData = await doctorsResponse.json();
+          
+          // Display the doctors
+          if (doctorsData.doctors && doctorsData.doctors.length > 0) {
+            emptyDoctors.style.display = 'none';
+            doctorTableContainer.style.display = 'block';
+            
+            // Clear existing rows
+            doctorTableBody.innerHTML = '';
+            
+            // Add doctor rows
+            doctorsData.doctors.forEach(doctor => {
+              // Check if we have a name from Firebase
+              const doctorName = doctor.name ? 
+                `${doctor.name}` : 
+                `Unknown Doctor`;
+              
+              const row = document.createElement('tr');
+              row.innerHTML = `
+                <td>${doctorName}</td>
+                <td>${doctor.address.substring(0, 8)}...${doctor.address.substring(doctor.address.length - 6)}</td>
+                <td>
+                  <button class="button button-sm button-danger" 
+                    data-doctor="${doctor.address}">Revoke Access</button>
+                </td>
+              `;
+              doctorTableBody.appendChild(row);
+            });
+            
+            // Add event listeners to revoke buttons
+            document.querySelectorAll('.button-danger').forEach(button => {
+              button.addEventListener('click', function() {
+                const doctorAddress = this.getAttribute('data-doctor');
+                revokeDoctor(doctorAddress, privateKey);
+              });
+            });
+            
+          } else {
+            emptyDoctors.style.display = 'block';
+            doctorTableContainer.style.display = 'none';
+          }
+          
+          // Store private key in a hidden field for the authorization form
+          document.getElementById('patient-private-key').value = privateKey;
+          
+          // Show content
+          loadingElement.style.display = 'none';
+          mainContent.style.display = 'block';
+          
+        } catch (error) {
+          console.error('Error fetching data:', error);
+          // Show error message instead of redirecting
+          showError(`Failed to load doctor data: ${error.message}`);
+          loadingElement.style.display = 'none';
+          mainContent.style.display = 'block';
+        }
+      }
+      
+      // Tab handling
+      document.querySelectorAll('.tab-button').forEach(button => {
+        button.addEventListener('click', function() {
+          // Remove active class from all buttons and content
+          document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          
+          // Add active class to clicked button and corresponding content
+          this.classList.add('active');
+          const tabId = this.getAttribute('data-tab');
+          document.getElementById(`${tabId}-tab`).classList.add('active');
+        });
+      });
+      
+      // Authorize doctor form submission
+      authorizeForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const doctorAddress = document.getElementById('doctor-address').value;
+        const privateKey = document.getElementById('patient-private-key').value;
+        
+        if (!doctorAddress || !privateKey) {
+          showError('Please fill in all fields');
+          return;
+        }
+        
+        // Show loading and hide form
+        authorizeForm.style.display = 'none';
+        authorizeLoading.style.display = 'flex';
+        
+        try {
+          const response = await fetch('/api/patient/authorize-doctor', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              patientId: currentPatientId,
+              patientPrivateKey: privateKey,
+              doctorAddress: doctorAddress
+            })
+          });
+          
+          const result = await response.json();
+          
+          if (response.ok) {
+            showSuccess(`Doctor ${doctorAddress} authorized successfully!`);
+            // Refresh the doctor list
+            fetchData();
+            // Reset form
+            document.getElementById('doctor-address').value = '';
+            // Switch to authorized tab
+            document.querySelector('.tab-button[data-tab="authorized"]').click();
+          } else {
+            showError(`Failed to authorize doctor: ${result.error}`);
+          }
+          
+        } catch (error) {
+          console.error('Error authorizing doctor:', error);
+          showError('An error occurred while authorizing the doctor');
+        }
+        
+        // Hide loading and show form
+        authorizeLoading.style.display = 'none';
+        authorizeForm.style.display = 'block';
+      });
+      
+      // Revoke doctor access
+      async function revokeDoctor(doctorAddress, privateKey) {
+        const confirmed = confirm(`Are you sure you want to revoke access for this doctor?`);
+        
+        if (!confirmed) {
+          return;
+        }
+        
+        // Show loading
+        loadingElement.style.display = 'flex';
+        mainContent.style.display = 'none';
+        
+        try {
+          const response = await fetch('/api/patient/revoke-doctor', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              patientId: currentPatientId,
+              patientPrivateKey: privateKey,
+              doctorAddress: doctorAddress
+            })
+          });
+          
+          const result = await response.json();
+          
+          if (response.ok) {
+            showSuccess(`Doctor access revoked successfully!`);
+            // Refresh the doctor list
+            fetchData();
+          } else {
+            showError(`Failed to revoke doctor access: ${result.error}`);
+            // Show content again
+            loadingElement.style.display = 'none';
+            mainContent.style.display = 'block';
+          }
+          
+        } catch (error) {
+          console.error('Error revoking doctor access:', error);
+          showError('An error occurred while revoking doctor access');
+          // Show content again
+          loadingElement.style.display = 'none';
+          mainContent.style.display = 'block';
+        }
+      }
+      
+      // Logout handler
+      document.getElementById('logout-btn').addEventListener('click', function() {
+        localStorage.removeItem('patientId');
+        window.location.href = '/';
+      });
+      
+      // Show success alert
+      function showSuccess(message) {
+        successAlert.textContent = message;
+        successAlert.style.display = 'block';
+        
+        // Hide after 5 seconds
+        setTimeout(() => {
+          successAlert.style.display = 'none';
+        }, 5000);
+      }
+      
+      // Show error alert
+      function showError(message) {
+        errorAlert.textContent = message;
+        errorAlert.style.display = 'block';
+        
+        // Hide after 5 seconds
+        setTimeout(() => {
+          errorAlert.style.display = 'none';
+        }, 5000);
+      }
+    });
+  </script>
+</body>
+</html> 
+ 

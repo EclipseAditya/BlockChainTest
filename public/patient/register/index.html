@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Registration | Medical Records Blockchain</title>
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --primary-dark: #2980b9;
+      --secondary-color: #2ecc71;
+      --secondary-dark: #27ae60;
+      --error-color: #e74c3c;
+      --text-color: #333;
+      --light-gray: #f4f6f9;
+      --border-color: #ddd;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: var(--light-gray);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      margin-bottom: 20px;
+    }
+    
+    h1, h2 {
+      color: var(--primary-color);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    .steps {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+    
+    .step {
+      text-align: center;
+      flex: 1;
+      position: relative;
+    }
+    
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: var(--light-gray);
+      color: var(--text-color);
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    .step.active .step-number {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .step.completed .step-number {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+    
+    .step-label {
+      font-size: 0.85rem;
+      color: #777;
+    }
+    
+    .step.active .step-label {
+      color: var(--primary-color);
+      font-weight: bold;
+    }
+    
+    .step.completed .step-label {
+      color: var(--secondary-color);
+    }
+    
+    .step-connector {
+      position: absolute;
+      top: 15px;
+      right: -50%;
+      width: 100%;
+      height: 2px;
+      background-color: var(--light-gray);
+      z-index: -1;
+    }
+    
+    .step.completed .step-connector {
+      background-color: var(--secondary-color);
+    }
+    
+    .step:last-child .step-connector {
+      display: none;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    }
+    
+    .form-row {
+      display: flex;
+      gap: 15px;
+    }
+    
+    .form-row .form-group {
+      flex: 1;
+    }
+    
+    .button {
+      display: inline-block;
+      background-color: var(--primary-color);
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+      text-align: center;
+    }
+    
+    .button:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .button-secondary {
+      background-color: var(--secondary-color);
+    }
+    
+    .button-secondary:hover {
+      background-color: var(--secondary-dark);
+    }
+    
+    .button-text {
+      background: none;
+      color: var(--primary-color);
+      border: none;
+      padding: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: underline;
+    }
+    
+    .button-text:hover {
+      color: var(--primary-dark);
+    }
+    
+    .error-message {
+      color: var(--error-color);
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .action-buttons .button {
+      flex: 1;
+    }
+    
+    .required-label::after {
+      content: " *";
+      color: var(--error-color);
+    }
+    
+    .info-text {
+      font-size: 14px;
+      color: #666;
+      margin-top: 5px;
+    }
+    
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-left-color: var(--primary-color);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/patient/login" class="button-text" style="position: absolute; top: 20px; left: 20px;">← Back to Login</a>
+    
+    <div class="card">
+      <h1>Patient Registration</h1>
+      
+      <div class="steps">
+        <div class="step completed">
+          <div class="step-number">1</div>
+          <div class="step-connector"></div>
+          <div class="step-label">Aadhaar Verification</div>
+        </div>
+        <div class="step active">
+          <div class="step-number">2</div>
+          <div class="step-connector"></div>
+          <div class="step-label">Medical Information</div>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-label">Get Patient ID</div>
+        </div>
+      </div>
+      
+      <form id="registration-form">
+        <div class="form-group">
+          <label for="aadhaar-number" class="required-label">Aadhaar Number</label>
+          <input 
+            type="text" 
+            id="aadhaar-number"
+            pattern="[0-9]{12}" 
+            maxlength="12" 
+            placeholder="Enter 12-digit Aadhaar number" 
+            required
+            readonly
+          >
+        </div>
+        
+        <div class="form-group">
+          <label for="full-name" class="required-label">Full Name</label>
+          <input 
+            type="text" 
+            id="full-name" 
+            placeholder="Enter your full name as per Aadhaar" 
+            required
+          >
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="age" class="required-label">Age</label>
+            <input 
+              type="number" 
+              id="age" 
+              min="1" 
+              max="120" 
+              placeholder="Enter age" 
+              required
+            >
+          </div>
+          
+          <div class="form-group">
+            <label for="gender" class="required-label">Gender</label>
+            <select id="gender" required>
+              <option value="" disabled selected>Select gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="blood-group" class="required-label">Blood Group</label>
+          <select id="blood-group" required>
+            <option value="" disabled selected>Select blood group</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="allergies">Allergies (if any)</label>
+          <textarea id="allergies" rows="2" placeholder="List any allergies you have"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="medical-conditions">Pre-existing Medical Conditions (if any)</label>
+          <textarea id="medical-conditions" rows="2" placeholder="List any pre-existing medical conditions"></textarea>
+        </div>
+        
+        <div class="action-buttons">
+          <button type="button" id="back-button" class="button" style="background-color: #95a5a6;">Back</button>
+          <button type="submit" id="submit-button" class="button button-secondary">Register</button>
+        </div>
+      </form>
+      
+      <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Registering your details...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const registrationForm = document.getElementById('registration-form');
+      const aadhaarInput = document.getElementById('aadhaar-number');
+      const backButton = document.getElementById('back-button');
+      const submitButton = document.getElementById('submit-button');
+      const loadingElement = document.getElementById('loading');
+      
+      // Get Aadhaar from URL parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const aadhaarFromUrl = urlParams.get('aadhaar');
+      
+      if (aadhaarFromUrl) {
+        aadhaarInput.value = aadhaarFromUrl;
+      } else {
+        // Redirect to login if no Aadhaar provided
+        window.location.href = '/patient/login';
+      }
+      
+      // Back button click handler
+      backButton.addEventListener('click', function() {
+        window.location.href = '/patient/login';
+      });
+      
+      // Form submission handler
+      registrationForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Basic validation
+        const fullName = document.getElementById('full-name').value.trim();
+        const age = document.getElementById('age').value;
+        const gender = document.getElementById('gender').value;
+        const bloodGroup = document.getElementById('blood-group').value;
+        const allergies = document.getElementById('allergies').value.trim();
+        const medicalConditions = document.getElementById('medical-conditions').value.trim();
+        
+        // Show loading state
+        registrationForm.style.display = 'none';
+        loadingElement.style.display = 'block';
+        
+        // Prepare data for submission
+        const patientData = {
+          aadharNumber: aadhaarInput.value,
+          fullName,
+          dob: '', // Add empty dob field
+          phoneNumber: '0000000000', // Add default phone
+          email: '', // Add empty email field
+          gender,
+          bloodGroup
+        };
+        
+        try {
+          // Send data to server
+          const response = await fetch('/api/patient/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(patientData)
+          });
+          
+          const result = await response.json();
+          
+          if (response.ok) {
+            // Success - redirect to confirmation page with patient ID
+            window.location.href = `/patient/confirmation?patientId=${result.patientId}`;
+          } else {
+            // Error handling
+            alert(`Registration failed: ${result.error}`);
+            registrationForm.style.display = 'block';
+            loadingElement.style.display = 'none';
+          }
+        } catch (error) {
+          console.error('Registration error:', error);
+          alert('Registration failed. Please try again later.');
+          registrationForm.style.display = 'block';
+          loadingElement.style.display = 'none';
+        }
+      });
+    });
+  </script>
+</body>
+</html> 
+ 

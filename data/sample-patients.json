@@ -1,0 +1,35 @@
+{
+  "patients": [
+    {
+      "patientId": "8a7d9c5f2b",
+      "aadharNumber": "123456789012",
+      "fullName": "Priya Sharma",
+      "walletAddress": "0x1234567890abcdef1234567890abcdef12345678",
+      "email": "priya.sharma@example.com",
+      "phoneNumber": "+91-9876543210",
+      "privateKey": "0x98e863060b6803628e1e606e468fe1966dbd506fc13383a394314d89d3fd2ba4",
+      "status": "active"
+    },
+    {
+      "patientId": "3c6e1b9a4d",
+      "aadharNumber": "234567890123",
+      "fullName": "Rahul Patel",
+      "walletAddress": "0xabcdef1234567890abcdef1234567890abcdefab",
+      "email": "rahul.patel@example.com",
+      "phoneNumber": "+91-8765432109",
+      "privateKey": "0x87c325dc6f01e9508c4b5a7b23a3b2383d44bd344aae5632f5659a2a33b9b789",
+      "status": "active"
+    },
+    {
+      "patientId": "5f2d7b3e1a",
+      "aadharNumber": "345678901234",
+      "fullName": "Ananya Singh",
+      "walletAddress": "0x2345678901abcdef2345678901abcdef23456789",
+      "email": "ananya.singh@example.com",
+      "phoneNumber": "+91-7654321098",
+      "privateKey": "0x73c4e6a529ad46e052d5b99fd1e2defe70d24ef1ea05db51e46f799aa7a93675",
+      "status": "active"
+    }
+  ]
+} 
+ 

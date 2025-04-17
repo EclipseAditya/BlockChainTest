@@ -1,0 +1,66 @@
+{
+  "nextIndex": 4,
+  "maxIndex": 19,
+  "accounts": {
+    "108f41780d": {
+      "address": "0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2",
+      "privateKey": "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519f97bede61418",
+      "index": 4
+    },
+    "1ef07584a8": {
+      "address": "0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2",
+      "privateKey": "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519f97bede61418",
+      "index": 4
+    },
+    "7342e5e4fd": {
+      "address": "0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2",
+      "privateKey": "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519f97bede61418",
+      "index": 4
+    },
+    "bb5f471aab": {
+      "address": "0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2",
+      "privateKey": "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519f97bede61418",
+      "index": 4
+    },
+    "cd7efa80bb": {
+      "address": "0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2",
+      "privateKey": "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519f97bede61418",
+      "index": 4
+    },
+    "PAT-AP9123-860964": {
+      "address": "0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2",
+      "privateKey": "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519f97bede61418",
+      "index": 4
+    },
+    "PAT-H4234-207357": {
+      "address": "0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2",
+      "privateKey": "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519f97bede61418",
+      "index": 4
+    },
+    "PAT-S4324-895148": {
+      "address": "0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2",
+      "privateKey": "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519f97bede61418",
+      "index": 4
+    },
+    "398fcb04fc": {
+      "address": "0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2",
+      "privateKey": "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519f97bede61418",
+      "index": 4
+    },
+    "8a40cf4b0a": {
+      "address": "0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2",
+      "privateKey": "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519f97bede61418",
+      "index": 4
+    },
+    "78723e6610": {
+      "address": "0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2",
+      "privateKey": "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519f97bede61418",
+      "index": 4
+    },
+    "15c3cf873b": {
+      "address": "0x2743bE8fa96BE68A8B779ebCEECA4c7544b41c95",
+      "privateKey": "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519f97bede61418",
+      "index": 4
+    }
+  }
+}

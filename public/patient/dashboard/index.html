@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Dashboard | Medical Records Blockchain</title>
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --primary-dark: #2980b9;
+      --secondary-color: #2ecc71;
+      --secondary-dark: #27ae60;
+      --error-color: #e74c3c;
+      --warning-color: #f39c12;
+      --text-color: #333;
+      --light-gray: #f4f6f9;
+      --border-color: #ddd;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: var(--light-gray);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .logo {
+      color: var(--primary-color);
+      font-size: 24px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    
+    .user-menu {
+      display: flex;
+      align-items: center;
+    }
+    
+    .user-name {
+      margin-right: 15px;
+      font-weight: 500;
+    }
+    
+    .logout-btn {
+      background-color: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .logout-btn:hover {
+      background-color: #f1f1f1;
+    }
+    
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      gap: 20px;
+    }
+    
+    .sidebar {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+    
+    .sidebar-menu {
+      list-style: none;
+    }
+    
+    .sidebar-menu li {
+      margin-bottom: 10px;
+    }
+    
+    .sidebar-menu a {
+      display: block;
+      padding: 10px 15px;
+      color: var(--text-color);
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+    
+    .sidebar-menu a.active,
+    .sidebar-menu a:hover {
+      background-color: var(--light-gray);
+      color: var(--primary-color);
+    }
+    
+    .sidebar-menu a.active {
+      font-weight: 500;
+      border-left: 3px solid var(--primary-color);
+    }
+    
+    .content {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+    }
+    
+    .content-header {
+      margin-bottom: 20px;
+    }
+    
+    .content-header h1 {
+      color: var(--text-color);
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+    
+    .content-header p {
+      color: #777;
+      font-size: 14px;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border-color);
+    }
+    
+    .card-title {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 15px;
+      color: var(--primary-color);
+    }
+    
+    .patient-info {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .info-group {
+      margin-bottom: 15px;
+    }
+    
+    .info-label {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 5px;
+    }
+    
+    .info-value {
+      font-weight: 500;
+      color: var(--text-color);
+      word-break: break-all;
+    }
+    
+    .records-list {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    
+    .records-list th,
+    .records-list td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .records-list th {
+      font-weight: 500;
+      color: #777;
+      font-size: 13px;
+      background-color: var(--light-gray);
+    }
+    
+    .records-list tr:hover {
+      background-color: var(--light-gray);
+    }
+    
+    .status-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .status-success {
+      background-color: rgba(46, 204, 113, 0.2);
+      color: var(--secondary-color);
+    }
+    
+    .status-pending {
+      background-color: rgba(243, 156, 18, 0.2);
+      color: var(--warning-color);
+    }
+    
+    .button {
+      display: inline-block;
+      background-color: var(--primary-color);
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
+    
+    .button:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .button-secondary {
+      background-color: var(--secondary-color);
+    }
+    
+    .button-secondary:hover {
+      background-color: var(--secondary-dark);
+    }
+    
+    .button-sm {
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+    }
+    
+    .empty-state img {
+      width: 120px;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+    
+    .empty-state h3 {
+      font-size: 18px;
+      color: #555;
+      margin-bottom: 10px;
+    }
+    
+    .empty-state p {
+      color: #777;
+      max-width: 400px;
+      margin: 0 auto 20px;
+    }
+    
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 0;
+    }
+    
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-left-color: var(--primary-color);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Make the dashboard responsive */
+    @media (max-width: 768px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+      
+      .patient-info {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* Add these styles to the existing style section */
+    .dashboard-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+    
+    .stat-card {
+      background-color: var(--light-gray);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      flex: 1;
+      margin-right: 15px;
+      border: 1px solid var(--border-color);
+    }
+    
+    .stat-card:last-child {
+      margin-right: 0;
+    }
+    
+    .stat-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--primary-color);
+      margin-bottom: 5px;
+    }
+    
+    .stat-label {
+      font-size: 14px;
+      color: #777;
+    }
+    
+    .record-type-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .record-type-item:last-child {
+      border-bottom: none;
+    }
+    
+    .record-type-name {
+      font-weight: 500;
+    }
+    
+    .record-type-count {
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: 20px;
+      padding: 2px 10px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <a href="/" class="logo">Medical Records Blockchain</a>
+      <div class="user-menu">
+        <span class="user-name" id="user-name">Loading...</span>
+        <button class="logout-btn" id="logout-btn">Logout</button>
+      </div>
+    </header>
+    
+    <div class="main-content">
+      <div class="sidebar">
+        <ul class="sidebar-menu">
+          <li><a href="/patient/dashboard" class="active">Dashboard</a></li>
+          <li><a href="/patient/records">My Records</a></li>
+          <li><a href="/patient/doctors">Authorized Doctors</a></li>
+          <li><a href="/patient/uploaders">Manage Uploaders</a></li>
+          <li><a href="/patient/settings">Account Settings</a></li>
+        </ul>
+      </div>
+      
+      <div class="content">
+        <div id="loading" class="loading">
+          <div class="spinner"></div>
+          <p>Loading your dashboard...</p>
+        </div>
+        
+        <div id="dashboard-content" style="display: none;">
+          <div class="content-header">
+            <h1>Patient Dashboard</h1>
+            <p>Welcome back to your medical records portal</p>
+          </div>
+          
+          <div class="card">
+            <div class="card-title">Your Information</div>
+            <div class="patient-info">
+              <div>
+                <div class="info-group">
+                  <div class="info-label">Patient ID</div>
+                  <div class="info-value" id="patient-id">-</div>
+                </div>
+                
+                <div class="info-group">
+                  <div class="info-label">Full Name</div>
+                  <div class="info-value" id="full-name">-</div>
+                </div>
+                
+                <div class="info-group">
+                  <div class="info-label">Age / Gender</div>
+                  <div class="info-value" id="age-gender">-</div>
+                </div>
+                
+                <div class="info-group">
+                  <div class="info-label">Blood Group</div>
+                  <div class="info-value" id="blood-group">-</div>
+                </div>
+              </div>
+              
+              <div>
+                <div class="info-group">
+                  <div class="info-label">Wallet Address</div>
+                  <div class="info-value" id="wallet-address">-</div>
+                </div>
+                
+                <div class="info-group">
+                  <div class="info-label">Email</div>
+                  <div class="info-value" id="email">-</div>
+                </div>
+                
+                <div class="info-group">
+                  <div class="info-label">Phone</div>
+                  <div class="info-value" id="phone">-</div>
+                </div>
+                
+                <div class="info-group">
+                  <div class="info-label">Registered On</div>
+                  <div class="info-value" id="registration-date">-</div>
+                </div>
+              </div>
+            </div>
+            <div class="info-group" style="margin-top: 15px;">
+              <div class="info-label">Medical Conditions</div>
+              <div class="info-value" id="medical-conditions">-</div>
+            </div>
+            <div class="info-group">
+              <div class="info-label">Allergies</div>
+              <div class="info-value" id="allergies">-</div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="card-title">Health Records Summary</div>
+            <div class="dashboard-stats">
+              <div class="stat-card">
+                <div class="stat-value" id="records-count">0</div>
+                <div class="stat-label">Total Records</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="doctors-count">0</div>
+                <div class="stat-label">Authorized Doctors</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="last-update">-</div>
+                <div class="stat-label">Last Update</div>
+              </div>
+            </div>
+            
+            <div id="records-by-type" style="margin-top: 20px;">
+              <h4 style="margin-bottom: 10px; font-size: 16px; color: #555;">Records by Type</h4>
+              <div id="record-type-list">
+                <!-- Record types will be added here -->
+                <p>No records available</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="card-title">Recent Medical Records</div>
+            <div id="records-container">
+              <div class="empty-state" id="no-records-message">
+                <svg width="120" height="120" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity: 0.5; margin-bottom: 20px;">
+                  <path d="M9 17H15M9 13H15M9 9H10M19 5H5C3.89543 5 3 5.89543 3 7V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V7C21 5.89543 20.1046 5 19 5Z" stroke="#777777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <h3>No Records Yet</h3>
+                <p>You don't have any medical records in the system yet. Your doctor will upload them during your next visit.</p>
+                <a href="#" class="button button-secondary">Learn More</a>
+              </div>
+              
+              <div id="records-table-container" style="display: none;">
+                <table class="records-list">
+                  <thead>
+                    <tr>
+                      <th>Record ID</th>
+                      <th>Type</th>
+                      <th>Added By</th>
+                      <th>Date</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="records-table-body">
+                    <!-- Records will be added here dynamically -->
+                  </tbody>
+                </table>
+                <a href="/patient/records?id=${currentPatientId}" class="button" style="margin-top: 15px;">View All Records</a>
+              </div>
+              
+              <div id="records-loading" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p>Loading your medical records...</p>
+              </div>
+              
+              <div id="records-error" style="display: none;">
+                <p class="error-message">There was an error loading your medical records. Please try again later.</p>
+                <button id="retry-records" class="button button-secondary">Retry</button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="card-title">Authorized Doctors</div>
+            <p>No doctors are currently authorized to access your records. Use the "Manage Access" section to give doctors permission to view or upload your medical records.</p>
+            <a href="/patient/doctors" class="button" style="margin-top: 15px;">Manage Doctor Access</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get patient ID from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const patientId = urlParams.get('id');
+      
+      // If no patient ID in URL, check localStorage
+      const storedPatientId = localStorage.getItem('patientId');
+      const currentPatientId = patientId || storedPatientId;
+      
+      // Redirect to login if no patient ID is found
+      if (!currentPatientId) {
+        window.location.href = '/patient/login.html';
+        return;
+      }
+      
+      // Store patient ID in localStorage for future use
+      localStorage.setItem('patientId', currentPatientId);
+      
+      // Update sidebar links with patient ID
+      document.querySelectorAll('.sidebar-menu a').forEach(link => {
+        const href = link.getAttribute('href').split('?')[0];
+        link.href = `${href}?id=${currentPatientId}`;
+      });
+      
+      // Update all doctor management links
+      document.querySelectorAll('a[href="/patient/doctors"]').forEach(link => {
+        link.href = `/patient/doctors?id=${currentPatientId}`;
+      });
+      
+      // Update "View All Records" link
+      document.querySelectorAll('a[href="/patient/records"]').forEach(link => {
+        link.href = `/patient/records?id=${currentPatientId}`;
+      });
+      
+      // Update all uploader management links
+      document.querySelectorAll('a[href="/patient/uploaders"]').forEach(link => {
+        link.href = `/patient/uploaders?id=${currentPatientId}`;
+      });
+      
+      const loadingElement = document.getElementById('loading');
+      const dashboardContent = document.getElementById('dashboard-content');
+      const patientIdElement = document.getElementById('patient-id');
+      const fullNameElement = document.getElementById('full-name');
+      const walletAddressElement = document.getElementById('wallet-address');
+      const userNameElement = document.getElementById('user-name');
+      const ageGenderElement = document.getElementById('age-gender');
+      const bloodGroupElement = document.getElementById('blood-group');
+      const emailElement = document.getElementById('email');
+      const phoneElement = document.getElementById('phone');
+      const registrationDateElement = document.getElementById('registration-date');
+      const medicalConditionsElement = document.getElementById('medical-conditions');
+      const allergiesElement = document.getElementById('allergies');
+      const recordsCountElement = document.getElementById('records-count');
+      const doctorsCountElement = document.getElementById('doctors-count');
+      const lastUpdateElement = document.getElementById('last-update');
+      const recordTypeListElement = document.getElementById('record-type-list');
+      const logoutButton = document.getElementById('logout-btn');
+      
+      // Fetch dashboard data
+      fetchDashboardData();
+      
+      async function fetchDashboardData() {
+        try {
+          // Use the consolidated dashboard API endpoint
+          const response = await fetch(`/api/patient/dashboard/${currentPatientId}`);
+          
+          if (!response.ok) {
+            throw new Error('Failed to fetch dashboard data');
+          }
+          
+          const dashboardData = await response.json();
+          
+          // Update UI with patient data
+          patientIdElement.textContent = dashboardData.patientId;
+          fullNameElement.textContent = dashboardData.fullName;
+          walletAddressElement.textContent = dashboardData.walletAddress;
+          userNameElement.textContent = dashboardData.fullName;
+          
+          // Update additional patient info
+          ageGenderElement.textContent = `${dashboardData.age || '-'} / ${dashboardData.gender || '-'}`;
+          bloodGroupElement.textContent = dashboardData.bloodGroup || '-';
+          emailElement.textContent = dashboardData.email || '-';
+          phoneElement.textContent = dashboardData.phoneNumber || '-';
+          
+          // Format registration date
+          let regDate = '-';
+          if (dashboardData.registrationDate) {
+            try {
+              regDate = new Date(dashboardData.registrationDate).toLocaleDateString();
+            } catch (e) {
+              regDate = dashboardData.registrationDate;
+            }
+          }
+          registrationDateElement.textContent = regDate;
+          
+          // Medical info
+          medicalConditionsElement.textContent = dashboardData.medicalConditions || 'None reported';
+          allergiesElement.textContent = dashboardData.allergies || 'None reported';
+          
+          // Update statistics
+          recordsCountElement.textContent = dashboardData.stats?.totalRecords || 0;
+          doctorsCountElement.textContent = dashboardData.stats?.authorizedDoctors || 0;
+          
+          // Format last update date
+          let lastUpdate = '-';
+          if (dashboardData.stats?.lastUpdate) {
+            try {
+              lastUpdate = new Date(dashboardData.stats.lastUpdate).toLocaleDateString();
+            } catch (e) {
+              lastUpdate = dashboardData.stats.lastUpdate;
+            }
+          }
+          lastUpdateElement.textContent = lastUpdate;
+          
+          // Display records by type
+          if (dashboardData.stats?.recordsByType && Object.keys(dashboardData.stats.recordsByType).length > 0) {
+            let recordTypeHtml = '';
+            Object.entries(dashboardData.stats.recordsByType).forEach(([type, count]) => {
+              recordTypeHtml += `
+                <div class="record-type-item">
+                  <span class="record-type-name">${type}</span>
+                  <span class="record-type-count">${count}</span>
+                </div>
+              `;
+            });
+            recordTypeListElement.innerHTML = recordTypeHtml;
+          } else {
+            recordTypeListElement.innerHTML = '<p>No records available</p>';
+          }
+          
+          // Update authorized doctors section if any exist
+          if (dashboardData.doctors && dashboardData.doctors.length > 0) {
+            // Replace the "no doctors" message with a list of doctors
+            const doctorCard = document.querySelector('.card:nth-child(4)');
+            let doctorHtml = `
+              <div class="card-title">Authorized Doctors (${dashboardData.doctors.length})</div>
+              <table class="records-list">
+                <thead>
+                  <tr>
+                    <th>Doctor Name</th>
+                    <th>Address</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+            `;
+            
+            dashboardData.doctors.forEach(doctor => {
+              const doctorName = doctor.name ? doctor.name : "Unknown Doctor";
+              doctorHtml += `
+                <tr>
+                  <td>${doctorName}</td>
+                  <td>${doctor.address.substring(0, 12)}...</td>
+                  <td>
+                    <button class="button button-sm" style="background-color: #e74c3c;" 
+                      onclick="revokeDoctor('${doctor.address}')">Revoke Access</button>
+                  </td>
+                </tr>
+              `;
+            });
+            
+            doctorHtml += `
+                </tbody>
+              </table>
+              <a href="/patient/doctors?id=${currentPatientId}" class="button" style="margin-top: 15px;">Manage Doctor Access</a>
+            `;
+            
+            doctorCard.innerHTML = doctorHtml;
+          }
+          
+          // Fetch medical records directly using the dedicated endpoint
+          fetchMedicalRecords(dashboardData.privateKey);
+          
+          // Show dashboard content
+          loadingElement.style.display = 'none';
+          dashboardContent.style.display = 'block';
+          
+        } catch (error) {
+          console.error('Error fetching dashboard data:', error);
+          loadingElement.style.display = 'none';
+          dashboardContent.innerHTML = `
+            <div class="error-container">
+              <h2>Error Loading Dashboard</h2>
+              <p>${error.message}</p>
+              <button class="button" onclick="location.reload()">Try Again</button>
+              <a href="/patient/login.html" class="button button-secondary">Back to Login</a>
+            </div>
+          `;
+        }
+      }
+      
+      async function fetchMedicalRecords(privateKey) {
+        const recordsLoading = document.getElementById('records-loading');
+        const recordsError = document.getElementById('records-error');
+        const noRecordsMessage = document.getElementById('no-records-message');
+        const recordsTableContainer = document.getElementById('records-table-container');
+        const recordsTableBody = document.getElementById('records-table-body');
+        const retryButton = document.getElementById('retry-records');
+        
+        // Show loading
+        recordsLoading.style.display = 'block';
+        recordsError.style.display = 'none';
+        noRecordsMessage.style.display = 'none';
+        recordsTableContainer.style.display = 'none';
+        
+        try {
+          // Fetch records with patient's private key
+          const response = await fetch(`/api/patient/records/${currentPatientId}?privateKey=${encodeURIComponent(privateKey)}`);
+          
+          if (!response.ok) {
+            throw new Error('Failed to fetch medical records');
+          }
+          
+          const recordsData = await response.json();
+          
+          // Hide loading
+          recordsLoading.style.display = 'none';
+          
+          if (!recordsData.records || recordsData.records.length === 0) {
+            // Show no records message
+            noRecordsMessage.style.display = 'block';
+            return;
+          }
+          
+          // Sort records by timestamp, newest first
+          const sortedRecords = [...recordsData.records].sort((a, b) => {
+            return parseInt(b.timestamp || 0) - parseInt(a.timestamp || 0);
+          });
+          
+          // Show only the 5 most recent records
+          const recentRecords = sortedRecords.slice(0, 5);
+          
+          // Build records table
+          let recordsHtml = '';
+          
+          recentRecords.forEach(record => {
+            // Format timestamp if possible
+            let formattedDate = 'Unknown';
+            try {
+              if (record.timestamp) {
+                const timestamp = parseInt(record.timestamp);
+                if (!isNaN(timestamp)) {
+                  formattedDate = new Date(timestamp * 1000).toLocaleDateString();
+                }
+              }
+            } catch (e) {
+              console.error('Error formatting date:', e);
+            }
+            
+            // Check for doctor name from Firebase data
+            let doctorDisplay = record.doctorAddress ? 
+              `${record.doctorAddress.substring(0, 6)}...${record.doctorAddress.substring(record.doctorAddress.length - 4)}` :
+              'Unknown';
+            
+            // Display record info in table
+            recordsHtml += `
+              <tr>
+                <td>${record.recordID.substring(0, 8)}...</td>
+                <td>${record.recordType || 'Unknown'}</td>
+                <td>${doctorDisplay}</td>
+                <td>${formattedDate}</td>
+                <td>
+                  <a href="https://gateway.pinata.cloud/ipfs/${record.cid}" target="_blank" class="button button-sm">
+                    View
+                  </a>
+                </td>
+              </tr>
+            `;
+          });
+          
+          recordsTableBody.innerHTML = recordsHtml;
+          recordsTableContainer.style.display = 'block';
+          
+        } catch (error) {
+          console.error('Error fetching medical records:', error);
+          recordsLoading.style.display = 'none';
+          recordsError.style.display = 'block';
+        }
+        
+        // Add retry button event listener
+        retryButton.addEventListener('click', () => {
+          fetchMedicalRecords(privateKey);
+        });
+      }
+      
+      // Handle logout
+      logoutButton.addEventListener('click', function() {
+        // In a real app, you would invalidate the session on the server
+        localStorage.removeItem('patientId');
+        window.location.href = '/';
+      });
+      
+      // Make these functions available to onclick handlers
+      window.viewRecord = function(recordId, cid) {
+        if (cid) {
+          // If we have a CID, we can try to view the record on IPFS gateway
+          const ipfsUrl = `https://gateway.pinata.cloud/ipfs/${cid}`;
+          window.open(ipfsUrl, '_blank');
+        } else {
+          alert(`Viewing record ${recordId}. This feature is coming soon!`);
+        }
+      };
+      
+      window.revokeDoctor = function(doctorAddress) {
+        const confirmRevoke = confirm(`Are you sure you want to revoke access for this doctor?`);
+        if (confirmRevoke) {
+          // Call the API to revoke access
+          fetch('/api/patient/revoke-doctor', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              patientId: currentPatientId,
+              patientPrivateKey: dashboardData.privateKey,
+              doctorAddress: doctorAddress
+            })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              alert('Doctor access revoked successfully!');
+              // Refresh the dashboard to show updated access list
+              fetchDashboardData();
+            } else {
+              alert(`Failed to revoke access: ${data.error}`);
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while revoking access. Please try again.');
+          });
+        }
+      };
+    });
+  </script>
+</body>
+</html> 
+ 

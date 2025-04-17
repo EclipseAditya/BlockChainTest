@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Upload Medical Records</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --error-color: #e74c3c;
+            --warning-color: #f39c12;
+            --text-color: #333;
+            --light-gray: #f5f5f5;
+            --border-color: #ddd;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f9f9f9;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        header h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            color: #666;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        input[type="text"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .file-input-container {
+            position: relative;
+            margin-top: 10px;
+        }
+        
+        .file-input-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 12px;
+            background-color: var(--light-gray);
+            border: 1px dashed var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 8px;
+        }
+        
+        .file-input-label:hover {
+            background-color: #e9e9e9;
+        }
+        
+        .file-input-label.has-file {
+            background-color: #e8f4fd;
+            border-color: var(--primary-color);
+        }
+        
+        .file-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 0.1px;
+            height: 0.1px;
+        }
+        
+        .file-name {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #666;
+            word-break: break-all;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        
+        .loading {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .error {
+            display: none;
+            background-color: #fdeaea;
+            border-left: 4px solid var(--error-color);
+            padding: 15px;
+            margin: 20px 0;
+            color: var(--error-color);
+        }
+        
+        .result {
+            display: none;
+            margin: 20px 0;
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .result-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+        
+        .result-content {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .result-row {
+            display: flex;
+            margin-bottom: 10px;
+            align-items: flex-start;
+        }
+        
+        .result-label {
+            flex: 0 0 120px;
+            font-weight: 500;
+            color: #666;
+        }
+        
+        .result-value {
+            flex: 1;
+            word-break: break-all;
+            font-family: monospace;
+            background-color: white;
+            padding: 5px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .tx-status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            background-color: #fff8e1;
+            color: var(--warning-color);
+        }
+        
+        .status-success {
+            background-color: #e8f5e9;
+            color: var(--secondary-color);
+        }
+        
+        .status-error {
+            background-color: #fdeaea;
+            color: var(--error-color);
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            color: var(--primary-color);
+        }
+        
+        small {
+            display: block;
+            margin-top: 5px;
+            color: #666;
+            font-size: 12px;
+        }
+        
+        .ipfs-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary-color);
+            text-decoration: none;
+            margin-left: 10px;
+        }
+        
+        .ipfs-link:hover {
+            text-decoration: underline;
+        }
+        
+        .try-again {
+            background-color: #fff;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            margin-top: 15px;
+        }
+        
+        .try-again:hover {
+            background-color: #f0f7fd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Doctor Upload Medical Records</h1>
+            <p>Upload patient medical records to blockchain and IPFS</p>
+        </header>
+
+        <div class="card">
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label for="doctorWallet">Doctor's Wallet Address</label>
+                    <input 
+                        type="text" 
+                        id="doctorWallet" 
+                        name="doctorWallet" 
+                        value="0x01E666BC2F9EDA707C04c1bBcDF01973595c5B58" 
+                        readonly
+                        required
+                    >
+                    <small>Your wallet address is used to authorize the upload</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="doctorPrivateKey">Doctor's Private Key</label>
+                    <input 
+                        type="text" 
+                        id="doctorPrivateKey" 
+                        name="doctorPrivateKey" 
+                        placeholder="Enter your private key to sign transactions"
+                        required
+                    >
+                    <small>Your private key is only used for signing transactions and is not stored</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="patientId">Patient ID</label>
+                    <input 
+                        type="text" 
+                        id="patientId" 
+                        name="patientId" 
+                        placeholder="Enter patient ID"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="patientWallet">Patient's Wallet Address</label>
+                    <input 
+                        type="text" 
+                        id="patientWallet" 
+                        name="patientWallet" 
+                        placeholder="Enter patient's wallet address"
+                        required
+                    >
+                    <small>The patient must have granted you access to upload records</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="diagnosisDate">Date of Diagnosis</label>
+                    <input 
+                        type="date" 
+                        id="diagnosisDate" 
+                        name="diagnosisDate"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="recordType">Record Type</label>
+                    <select 
+                        id="recordType" 
+                        name="recordType"
+                        required
+                    >
+                        <option value="" disabled selected>Select record type</option>
+                        <option value="Blood Test">Blood Test</option>
+                        <option value="X-Ray">X-Ray</option>
+                        <option value="MRI">MRI</option>
+                        <option value="CT Scan">CT Scan</option>
+                        <option value="Prescription">Prescription</option>
+                        <option value="Surgical Report">Surgical Report</option>
+                        <option value="Medical Certificate">Medical Certificate</option>
+                        <option value="Doctor's Note">Doctor's Note</option>
+                        <option value="Discharge Summary">Discharge Summary</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Medical File</label>
+                    <div class="file-input-container">
+                        <label for="medicalFile" class="file-input-label" id="fileInputLabel">
+                            <span>Choose file or drag and drop</span>
+                        </label>
+                        <input 
+                            type="file" 
+                            id="medicalFile" 
+                            name="medicalFile" 
+                            class="file-input"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            required
+                        >
+                        <div class="file-name" id="fileName"></div>
+                    </div>
+                    <small>Accepted formats: PDF, JPG, PNG</small>
+                </div>
+
+                <button type="submit" id="uploadButton">Upload to Blockchain & IPFS</button>
+            </form>
+        </div>
+
+        <div class="loading" id="loadingIndicator">
+            <div class="spinner"></div>
+            <p>Uploading file to IPFS and blockchain...</p>
+        </div>
+        
+        <div class="error" id="errorMessage"></div>
+        
+        <div class="result" id="resultContainer">
+            <div class="result-header">
+                <div class="result-title">Upload Successful</div>
+            </div>
+            
+            <div class="result-content">
+                <div class="result-row">
+                    <div class="result-label">Patient ID:</div>
+                    <div class="result-value" id="resultPatientId"></div>
+                </div>
+                
+                <div class="result-row">
+                    <div class="result-label">Record ID:</div>
+                    <div class="result-value" id="resultRecordId"></div>
+                </div>
+                
+                <div class="result-row">
+                    <div class="result-label">Record Type:</div>
+                    <div class="result-value" id="resultRecordType"></div>
+                </div>
+                
+                <div class="result-row">
+                    <div class="result-label">File Hash:</div>
+                    <div class="result-value" id="resultFileHash"></div>
+                </div>
+                
+                <div class="result-row">
+                    <div class="result-label">IPFS CID:</div>
+                    <div class="result-value">
+                        <span id="resultCid"></span>
+                        <a href="#" class="ipfs-link" id="ipfsLink" target="_blank">View on IPFS</a>
+                    </div>
+                </div>
+                
+                <div class="result-row">
+                    <div class="result-label">Transaction:</div>
+                    <div class="result-value">
+                        <span id="resultTxHash"></span>
+                        <span class="tx-status status-success" id="txStatus">Success</span>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="try-again" id="tryAgainButton">Upload Another Record</button>
+        </div>
+        
+        <a href="/" class="back-link">&larr; Back to Home</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const uploadForm = document.getElementById('uploadForm');
+            const fileInput = document.getElementById('medicalFile');
+            const fileInputLabel = document.getElementById('fileInputLabel');
+            const fileName = document.getElementById('fileName');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const errorMessage = document.getElementById('errorMessage');
+            const resultContainer = document.getElementById('resultContainer');
+            const patientWalletInput = document.getElementById('patientWallet');
+            
+            // Check for patient parameter in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const patientParam = urlParams.get('patient');
+            
+            // If patient parameter exists, set the patient wallet field
+            if (patientParam) {
+                patientWalletInput.value = patientParam;
+            }
+            
+            // Handle file input changes
+            fileInput.addEventListener('change', function(e) {
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    fileName.textContent = file.name;
+                    fileInputLabel.classList.add('has-file');
+                    fileInputLabel.innerHTML = '<span>File selected</span>';
+                } else {
+                    fileName.textContent = '';
+                    fileInputLabel.classList.remove('has-file');
+                    fileInputLabel.innerHTML = '<span>Choose file or drag and drop</span>';
+                }
+            });
+            
+            // Handle form submission
+            uploadForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Get form data
+                const formData = new FormData(uploadForm);
+                
+                // Validate form data
+                if (!formData.get('doctorWallet') || !formData.get('patientId') || 
+                    !formData.get('patientWallet') || !formData.get('diagnosisDate') || 
+                    !formData.get('recordType') || !formData.get('medicalFile')) {
+                    showError('Please fill in all required fields');
+                    return;
+                }
+                
+                // Format the date to ddmmyyyy format
+                const diagnosisDate = new Date(formData.get('diagnosisDate'));
+                const formattedDate = 
+                    diagnosisDate.getDate().toString().padStart(2, '0') + 
+                    (diagnosisDate.getMonth() + 1).toString().padStart(2, '0') + 
+                    diagnosisDate.getFullYear();
+                
+                // Create a new FormData object with the formatted date
+                const submitFormData = new FormData();
+                submitFormData.append('doctorWallet', formData.get('doctorWallet'));
+                submitFormData.append('doctorPrivateKey', formData.get('doctorPrivateKey'));
+                submitFormData.append('patientId', formData.get('patientId'));
+                submitFormData.append('patientWallet', formData.get('patientWallet'));
+                submitFormData.append('diagnosisDate', formattedDate);
+                submitFormData.append('recordType', formData.get('recordType'));
+                submitFormData.append('medicalFile', formData.get('medicalFile'));
+                
+                // Show loading indicator
+                showLoading();
+                
+                try {
+                    // Submit the form data
+                    const response = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: submitFormData
+                    });
+                    
+                    const data = await response.json();
+                    
+                    // Hide loading indicator
+                    hideLoading();
+                    
+                    if (!response.ok) {
+                        showError(data.error || 'Failed to upload record');
+                        return;
+                    }
+                    
+                    // Display results
+                    displayResult(data.data);
+                    
+                } catch (error) {
+                    hideLoading();
+                    showError('An error occurred: ' + error.message);
+                }
+            });
+            
+            // Try again button
+            document.getElementById('tryAgainButton').addEventListener('click', function() {
+                // Reset form
+                uploadForm.reset();
+                fileName.textContent = '';
+                fileInputLabel.classList.remove('has-file');
+                fileInputLabel.innerHTML = '<span>Choose file or drag and drop</span>';
+                
+                // If there was a patient parameter in the URL, restore it
+                if (patientParam) {
+                    patientWalletInput.value = patientParam;
+                }
+                
+                // Hide results and errors
+                resultContainer.style.display = 'none';
+                errorMessage.style.display = 'none';
+            });
+            
+            // Function to show loading indicator
+            function showLoading() {
+                loadingIndicator.style.display = 'flex';
+                errorMessage.style.display = 'none';
+                resultContainer.style.display = 'none';
+            }
+            
+            // Function to hide loading indicator
+            function hideLoading() {
+                loadingIndicator.style.display = 'none';
+            }
+            
+            // Function to show error message
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+                resultContainer.style.display = 'none';
+            }
+            
+            // Function to display results
+            function displayResult(data) {
+                // Set result values
+                document.getElementById('resultPatientId').textContent = data.patientId;
+                document.getElementById('resultRecordId').textContent = data.recordId;
+                document.getElementById('resultRecordType').textContent = data.recordType;
+                document.getElementById('resultFileHash').textContent = data.sha256Hash;
+                document.getElementById('resultCid').textContent = data.cid;
+                document.getElementById('resultTxHash').textContent = data.blockchainTx;
+                
+                // Update IPFS link
+                document.getElementById('ipfsLink').href = `https://gateway.pinata.cloud/ipfs/${data.cid}`;
+                
+                // Update transaction status
+                const txStatus = document.getElementById('txStatus');
+                if (data.blockchainTx === "Not added to blockchain") {
+                    txStatus.textContent = 'Not on blockchain';
+                    txStatus.className = 'tx-status status-warning';
+                } else if (data.blockchainResult && data.blockchainResult.includes('Error')) {
+                    txStatus.textContent = 'Failed';
+                    txStatus.className = 'tx-status status-error';
+                } else {
+                    txStatus.textContent = 'Success';
+                    txStatus.className = 'tx-status status-success';
+                }
+                
+                // Show results container
+                resultContainer.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html> 

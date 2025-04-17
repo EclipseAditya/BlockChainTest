@@ -1,0 +1,13 @@
+{
+  "patientId": "PAT-AP9123-860964",
+  "walletAddress": "0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2",
+  "aadhaarNumber": "123456789123",
+  "fullName": "Aditya Pandey",
+  "age": 19,
+  "gender": "Male",
+  "bloodGroup": "AB+",
+  "allergies": "No",
+  "medicalConditions": "No",
+  "registrationDate": "2025-04-05T20:44:20.964Z",
+  "privateKey": "0x388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519f97bede61418"
+}
